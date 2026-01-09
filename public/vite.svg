@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg"
- width="1024pt" height="1024pt" viewBox="0 0 1024 1024" preserveAspectRatio="xMidYMid meet">
-<defs>
-  <clipPath id="roundedCorners">
-    <rect x="0" y="0" width="1024" height="1024" rx="64" ry="64"/>
-  </clipPath>
-</defs>
-<g id="svg" fill="black" stroke="none" stroke-linecap="round" transform="scale(0.1,0.1)" clip-path="url(#roundedCorners)">
-<path d="M0 5120l0 5120 5120 0 5120 0 0 -5120 0 -5120 -5120 0 -5120 0 0 5120 z" fill="rgb(22, 12, 36)"/>
+ width="1024pt" height="1024pt" viewBox="0 0 1024 1024" preserveAspectRatio="xMidYMid meet" clip-path="url(#circleClip)">
+<circle cx="512" cy="512" r="512" fill="rgb(22, 12, 36)"/>
+<g id="svg" fill="black" stroke="none" stroke-linecap="round" transform="scale(0.1,0.1)">
 <path d="M6356 2403c-9 31 -27 79 -41 106 -13 27 -43 65 -66 85 -23 19 -64 42 -90 51 
 -27 8 -58 17 -69 20 -14 3 4 13 55 29 60 20 84 34 124 75 42 41 54 63 76 130 
 14 45 28 80 33 79 4 -2 16 -37 27 -78 18 -63 29 -83 71 -126 37 -39 65 -57 112 -73 
