@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Button, Fade, Box, CircularProgress, Grow } from "@mui/material";
 import type { SxProps } from "@mui/material/styles";
 import { getAvatarDownloadBlob } from "../services/api";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../services/firebase";
 
 type AvatarViewProps = {
   imageUrl: string;
@@ -40,6 +42,8 @@ export default function AvatarView({
     try {
       e.stopPropagation();
       setIsLoading(true);
+      logEvent(analytics, "download_image", { image_name: name });
+
       const blob = await getAvatarDownloadBlob(name);
       const url = URL.createObjectURL(blob);
 
