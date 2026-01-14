@@ -6,6 +6,7 @@ import type { SxProps } from "@mui/material/styles";
 import { getAvatarDownloadBlob } from "../services/api";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../services/firebase";
+import { useSnackbar } from "../hooks/useSnackbar";
 
 type AvatarViewProps = {
   imageUrl: string;
@@ -25,6 +26,7 @@ export default function AvatarView({
 }: Readonly<AvatarViewProps>) {
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
 
   useEffect(() => {
     setOpenBackdrop(open);
@@ -54,8 +56,11 @@ export default function AvatarView({
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error(error);
+    } catch {
+      showSnackbar({
+        message: "Download failed. Please try again later.",
+        severity: "error",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -64,50 +69,53 @@ export default function AvatarView({
   const onContextMenu: AvatarProps["onContextMenu"] = (e) => e.preventDefault();
 
   return (
-    <Fade in={openBackdrop} timeout={TIMEOUT} onExited={onExited}>
-      <Backdrop open={open} onClick={handleOnClose}>
-        <Box
-          onClick={(e) => e.stopPropagation()}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 2,
-          }}
-        >
-          <Avatar src={imageUrl} sx={sx} onContextMenu={onContextMenu} />
-
+    <>
+      <Fade in={openBackdrop} timeout={TIMEOUT} onExited={onExited}>
+        <Backdrop open={open} onClick={handleOnClose}>
           <Box
+            onClick={(e) => e.stopPropagation()}
             sx={{
-              position: "relative",
-              width: "100%",
               display: "flex",
-              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
             }}
           >
-            {isLoading && (
-              <CircularProgress
-                color="secondary"
-                size={36}
-                sx={{
-                  position: "absolute",
-                }}
-              />
-            )}
-            <Grow in={!isLoading} timeout={300}>
-              <Button
-                variant="contained"
-                onClick={download}
-                fullWidth
-                sx={{ backgroundColor: "#464343" }}
-                aria-label="Download avatar"
-              >
-                Download
-              </Button>
-            </Grow>
+            <Avatar src={imageUrl} sx={sx} onContextMenu={onContextMenu} />
+
+            <Box
+              sx={{
+                position: "relative",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {isLoading && (
+                <CircularProgress
+                  color="secondary"
+                  size={36}
+                  sx={{
+                    position: "absolute",
+                  }}
+                />
+              )}
+              <Grow in={!isLoading} timeout={300}>
+                <Button
+                  variant="contained"
+                  onClick={download}
+                  fullWidth
+                  sx={{ backgroundColor: "#464343" }}
+                  aria-label="Download avatar"
+                >
+                  Download
+                </Button>
+              </Grow>
+            </Box>
           </Box>
-        </Box>
-      </Backdrop>
-    </Fade>
+        </Backdrop>
+      </Fade>
+      {SnackbarComponent}
+    </>
   );
 }

@@ -10,7 +10,6 @@ export const getAvatars = async () => {
   const avatarList = (await getDocs(avatarsCollection)).docs.map((doc) =>
     doc.data()
   );
-  console.log(avatarList);
   return avatarList;
 };
 
