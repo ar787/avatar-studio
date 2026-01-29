@@ -10,9 +10,10 @@ import React from "react";
 type AvatarCardProps = {
   avatar: AvatarType;
   onClick: (name: AvatarType) => void;
+  name: string;
 };
 
-function AvatarCard({ avatar, onClick }: Readonly<AvatarCardProps>) {
+function AvatarCard({ avatar, name, onClick }: Readonly<AvatarCardProps>) {
   const handleOnClick = () => {
     onClick(avatar);
   };
@@ -22,7 +23,7 @@ function AvatarCard({ avatar, onClick }: Readonly<AvatarCardProps>) {
   };
 
   return (
-    <Card variant="elevation">
+    <Card variant="elevation" sx={{  borderRadius: "16px" }}>
       <CardActionArea
         onClick={handleOnClick}
         tabIndex={0}
@@ -31,7 +32,7 @@ function AvatarCard({ avatar, onClick }: Readonly<AvatarCardProps>) {
         <CardMedia
           component="img"
           src={avatar.imageUrl}
-          alt={`Avatar of ${avatar.name}`}
+          alt={name}
           sizes="20"
           onContextMenu={onContextMenu}
         />

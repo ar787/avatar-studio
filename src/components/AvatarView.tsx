@@ -1,7 +1,7 @@
 import Backdrop from "@mui/material/Backdrop";
 import Avatar, { type AvatarProps } from "@mui/material/Avatar";
-import { useEffect, useState } from "react";
-import { Button, Fade, Box, CircularProgress, Grow } from "@mui/material";
+import { useState } from "react";
+import { Button, Fade, Box, CircularProgress, Grow, Zoom } from "@mui/material";
 import type { SxProps } from "@mui/material/styles";
 import { getAvatarDownloadBlob } from "../services/api";
 import { logEvent } from "firebase/analytics";
@@ -24,20 +24,17 @@ export default function AvatarView({
   imageUrl,
   name,
 }: Readonly<AvatarViewProps>) {
-  const [openBackdrop, setOpenBackdrop] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { showSnackbar, SnackbarComponent } = useSnackbar();
 
-  useEffect(() => {
-    setOpenBackdrop(open);
-  }, [open]);
-
   function handleOnClose() {
-    setOpenBackdrop(false);
+    onClose();
   }
 
-  function onExited() {
-    onClose();
+  function generateUniqueFileName(): string {
+    const timestamp = Date.now().toString();
+    const lastFourDigits = timestamp.slice(-4);
+    return `avatar-${lastFourDigits}.png`;
   }
 
   async function download(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -51,7 +48,7 @@ export default function AvatarView({
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${name}.png`;
+      a.download = generateUniqueFileName();
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -60,6 +57,7 @@ export default function AvatarView({
       showSnackbar({
         message: "Download failed. Please try again later.",
         severity: "error",
+        anchorOrigin: { vertical: "top", horizontal: "right" },
       });
     } finally {
       setIsLoading(false);
@@ -70,7 +68,7 @@ export default function AvatarView({
 
   return (
     <>
-      <Fade in={openBackdrop} timeout={TIMEOUT} onExited={onExited}>
+      <Fade in={open} timeout={{ enter: 0, exit: TIMEOUT }}>
         <Backdrop open={open} onClick={handleOnClose}>
           <Box
             onClick={(e) => e.stopPropagation()}
@@ -81,7 +79,9 @@ export default function AvatarView({
               gap: 2,
             }}
           >
-            <Avatar src={imageUrl} sx={sx} onContextMenu={onContextMenu} />
+            <Zoom in={open} timeout={{ enter: 200, exit: 0 }}>
+              <Avatar src={imageUrl} sx={sx} onContextMenu={onContextMenu} />
+            </Zoom>
 
             <Box
               sx={{
@@ -105,7 +105,28 @@ export default function AvatarView({
                   variant="contained"
                   onClick={download}
                   fullWidth
-                  sx={{ backgroundColor: "#464343" }}
+                  sx={{
+                    background: "linear-gradient(135deg, #6A1B9A 0%, #FF4081 50%, #7C4DFF 100%)",
+                    color: "#FFFFFF",
+                    textTransform: "uppercase",
+                    letterSpacing: 2,
+                    fontWeight: 700,
+                    borderRadius: "999px",
+                    px: 4,
+                    py: 1.5,
+                    boxShadow: "0 0 18px rgba(255, 64, 129, 0.7)",
+                    border: "1px solid rgba(255, 255, 255, 0.25)",
+                    transition: "all 0.2s ease-out",
+                    "&:hover": {
+                      background: "linear-gradient(135deg, #4A148C 0%, #F50057 50%, #651FFF 100%)",
+                      boxShadow: "0 0 26px rgba(255, 64, 129, 1)",
+                      transform: "translateY(-2px) scale(1.03)",
+                    },
+                    "&:active": {
+                      transform: "translateY(0) scale(0.98)",
+                      boxShadow: "0 0 12px rgba(255, 64, 129, 0.6)",
+                    },
+                  }}
                   aria-label="Download avatar"
                 >
                   Download
