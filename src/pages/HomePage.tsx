@@ -7,7 +7,7 @@ import AvatarView from "../components/AvatarView";
 import type { AvatarType } from "../types/avatar";
 
 const avatarsPromise = getAvatars();
-const sizes: GridBaseProps["size"] = { xs: 4,  md: 4, lg: 2 };
+const sizes: GridBaseProps["size"] = { xs: 4, md: 4, lg: 2 };
 const STAGGER = 80; // ms delay per item
 const ANIM_DURATION = 600;
 
@@ -21,12 +21,6 @@ export default function HomePage() {
   }, []);
 
   // Preload avatar images so the large preview appears without network delay
-  useEffect(() => {
-    avatars.forEach((a) => {
-      const img = new Image();
-      img.src = a.imageUrl;
-    });
-  }, [avatars.length]);
 
   const handleClick = useCallback((avatar: AvatarType) => {
     setAvatar(avatar);
@@ -50,7 +44,11 @@ export default function HomePage() {
           >
             <Grid size={sizes}>
               <Box>
-                <AvatarCard avatar={el}name={`avatar-${index}`} onClick={handleClick} />
+                <AvatarCard
+                  avatar={el}
+                  name={`avatar-${index}`}
+                  onClick={handleClick}
+                />
               </Box>
             </Grid>
           </Fade>

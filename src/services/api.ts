@@ -5,11 +5,17 @@ import { getBlob, ref } from "firebase/storage";
 
 export const getAvatars = async () => {
   const avatarsCollection = collection(db, "avatars").withConverter(
-    avatarConverter
+    avatarConverter,
   );
   const avatarList = (await getDocs(avatarsCollection)).docs.map((doc) =>
-    doc.data()
+    doc.data(),
   );
+
+  avatarList.forEach((a) => {
+    const img = new Image();
+    img.src = a.imageUrl;
+  });
+
   return avatarList;
 };
 
