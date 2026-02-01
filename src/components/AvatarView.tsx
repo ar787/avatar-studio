@@ -15,7 +15,12 @@ type AvatarViewProps = {
   onClose: () => void;
 };
 
-const sx: SxProps = { width: 400, height: 400 };
+const sx: SxProps = {
+  width: "100%",
+  height: "100%",
+  maxWidth: 400,
+  maxHeight: 400,
+};
 const TIMEOUT = 300;
 
 export default function AvatarView({
@@ -76,6 +81,7 @@ export default function AvatarView({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              paddingX: { xs: "10px", sm: 0 },
               gap: 2,
             }}
           >
@@ -106,7 +112,8 @@ export default function AvatarView({
                   onClick={download}
                   fullWidth
                   sx={{
-                    background: "linear-gradient(135deg, #6A1B9A 0%, #FF4081 50%, #7C4DFF 100%)",
+                    background:
+                      "linear-gradient(135deg, #6A1B9A 0%, #FF4081 50%, #7C4DFF 100%)",
                     color: "#FFFFFF",
                     textTransform: "uppercase",
                     letterSpacing: 2,
@@ -118,7 +125,8 @@ export default function AvatarView({
                     border: "1px solid rgba(255, 255, 255, 0.25)",
                     transition: "all 0.2s ease-out",
                     "&:hover": {
-                      background: "linear-gradient(135deg, #4A148C 0%, #F50057 50%, #651FFF 100%)",
+                      background:
+                        "linear-gradient(135deg, #4A148C 0%, #F50057 50%, #651FFF 100%)",
                       boxShadow: "0 0 26px rgba(255, 64, 129, 1)",
                       transform: "translateY(-2px) scale(1.03)",
                     },
