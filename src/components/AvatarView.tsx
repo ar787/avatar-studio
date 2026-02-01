@@ -50,7 +50,6 @@ export default function AvatarView({
 
       const blob = await getAvatarDownloadBlob(name);
       const url = URL.createObjectURL(blob);
-
       const a = document.createElement("a");
       a.href = url;
       a.download = generateUniqueFileName();
@@ -86,7 +85,13 @@ export default function AvatarView({
             }}
           >
             <Zoom in={open} timeout={{ enter: 200, exit: 0 }}>
-              <Avatar src={imageUrl} sx={sx} onContextMenu={onContextMenu} />
+              <Avatar
+                src={imageUrl}
+                draggable={false}
+                sx={sx}
+                slotProps={{ img: { draggable: false } }}
+                onContextMenu={onContextMenu}
+              />
             </Zoom>
 
             <Box

@@ -23,7 +23,7 @@ function AvatarCard({ avatar, name, onClick }: Readonly<AvatarCardProps>) {
   };
 
   return (
-    <Card variant="elevation" sx={{  borderRadius: "16px" }}>
+    <Card variant="elevation" sx={{ borderRadius: "16px" }}>
       <CardActionArea
         onClick={handleOnClick}
         tabIndex={0}
@@ -33,6 +33,7 @@ function AvatarCard({ avatar, name, onClick }: Readonly<AvatarCardProps>) {
           component="img"
           src={avatar.imageUrl}
           alt={name}
+          draggable={false}
           sizes="20"
           onContextMenu={onContextMenu}
         />
