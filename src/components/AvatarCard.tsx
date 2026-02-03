@@ -3,6 +3,7 @@ import {
   CardActionArea,
   CardMedia,
   type CardMediaProps,
+  type SxProps,
 } from "@mui/material";
 import type { AvatarType } from "../types/avatar";
 import React from "react";
@@ -11,6 +12,12 @@ type AvatarCardProps = {
   avatar: AvatarType;
   onClick: (name: AvatarType) => void;
   name: string;
+};
+
+const sx: SxProps = {
+  WebkitTouchCallout: "none",
+  userSelect: "none",
+  WebkitUserSelect: "none",
 };
 
 function AvatarCard({ avatar, name, onClick }: Readonly<AvatarCardProps>) {
@@ -35,6 +42,7 @@ function AvatarCard({ avatar, name, onClick }: Readonly<AvatarCardProps>) {
           alt={name}
           draggable={false}
           sizes="20"
+          sx={sx}
           onContextMenu={onContextMenu}
         />
       </CardActionArea>

@@ -20,8 +20,18 @@ const sx: SxProps = {
   height: "100%",
   maxWidth: 400,
   maxHeight: 400,
+  WebkitTouchCallout: "none",
+  userSelect: "none",
+  WebkitUserSelect: "none"
 };
 const TIMEOUT = 300;
+
+
+function generateUniqueFileName(): string {
+  const timestamp = Date.now().toString();
+  const lastFourDigits = timestamp.slice(-4);
+  return `avatar-${lastFourDigits}.png`;
+}
 
 export default function AvatarView({
   open,
@@ -34,12 +44,6 @@ export default function AvatarView({
 
   function handleOnClose() {
     onClose();
-  }
-
-  function generateUniqueFileName(): string {
-    const timestamp = Date.now().toString();
-    const lastFourDigits = timestamp.slice(-4);
-    return `avatar-${lastFourDigits}.png`;
   }
 
   async function download(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
