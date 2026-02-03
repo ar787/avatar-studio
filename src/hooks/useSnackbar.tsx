@@ -1,33 +1,33 @@
-import { useState, type ReactNode } from "react";
+import { useState, type ReactNode } from 'react';
 import {
   Snackbar,
   Alert,
   type AlertColor,
   type SnackbarProps,
-} from "@mui/material";
+} from '@mui/material';
 
 type SnackbarOptions = {
   message: string;
   severity?: AlertColor;
   duration?: number;
   action?: ReactNode;
-  anchorOrigin?: SnackbarProps["anchorOrigin"];
+  anchorOrigin?: SnackbarProps['anchorOrigin'];
 };
 
 export function useSnackbar() {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<SnackbarOptions>({
-    message: "",
-    severity: "info",
+    message: '',
+    severity: 'info',
     duration: 4000,
-    anchorOrigin: { vertical: "top", horizontal: "center" },
+    anchorOrigin: { vertical: 'top', horizontal: 'center' },
   });
 
   const showSnackbar = (opts: SnackbarOptions) => {
     setOptions({
-      severity: "info",
+      severity: 'info',
       duration: 4000,
-      anchorOrigin: { vertical: "top", horizontal: "center" },
+      anchorOrigin: { vertical: 'top', horizontal: 'center' },
       ...opts,
     });
     setOpen(true);

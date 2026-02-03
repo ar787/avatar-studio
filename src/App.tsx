@@ -1,9 +1,9 @@
-import { Suspense } from "react";
-import "./App.css";
-import { Container } from "@mui/material";
+import { Suspense } from 'react';
+import './App.css';
+import { Container } from '@mui/material';
 
-import HomePage from "./pages/HomePage";
-import LoadingPage from "./pages/LoadingPage";
+import HomePage from './pages/HomePage';
+import LoadingPage from './pages/LoadingPage';
 
 function App() {
   return (

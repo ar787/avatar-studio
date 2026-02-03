@@ -4,9 +4,9 @@ import {
   CardMedia,
   type CardMediaProps,
   type SxProps,
-} from "@mui/material";
-import type { AvatarType } from "../types/avatar";
-import React from "react";
+} from '@mui/material';
+import type { AvatarType } from '../types/avatar';
+import React from 'react';
 
 type AvatarCardProps = {
   avatar: AvatarType;
@@ -15,9 +15,9 @@ type AvatarCardProps = {
 };
 
 const sx: SxProps = {
-  WebkitTouchCallout: "none",
-  userSelect: "none",
-  WebkitUserSelect: "none",
+  WebkitTouchCallout: 'none',
+  userSelect: 'none',
+  WebkitUserSelect: 'none',
 };
 
 function AvatarCard({ avatar, name, onClick }: Readonly<AvatarCardProps>) {
@@ -25,12 +25,12 @@ function AvatarCard({ avatar, name, onClick }: Readonly<AvatarCardProps>) {
     onClick(avatar);
   };
 
-  const onContextMenu: CardMediaProps["onContextMenu"] = (e) => {
+  const onContextMenu: CardMediaProps['onContextMenu'] = (e) => {
     e.preventDefault();
   };
 
   return (
-    <Card variant="elevation" sx={{ borderRadius: "16px" }}>
+    <Card variant="elevation" sx={{ borderRadius: '16px' }}>
       <CardActionArea
         onClick={handleOnClick}
         tabIndex={0}

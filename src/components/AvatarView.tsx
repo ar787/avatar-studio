@@ -1,12 +1,12 @@
-import Backdrop from "@mui/material/Backdrop";
-import Avatar, { type AvatarProps } from "@mui/material/Avatar";
-import { useState } from "react";
-import { Button, Fade, Box, CircularProgress, Grow, Zoom } from "@mui/material";
-import type { SxProps } from "@mui/material/styles";
-import { getAvatarDownloadBlob } from "../services/api";
-import { logEvent } from "firebase/analytics";
-import { analytics } from "../services/firebase";
-import { useSnackbar } from "../hooks/useSnackbar";
+import Backdrop from '@mui/material/Backdrop';
+import Avatar, { type AvatarProps } from '@mui/material/Avatar';
+import { useState } from 'react';
+import { Button, Fade, Box, CircularProgress, Grow, Zoom } from '@mui/material';
+import type { SxProps } from '@mui/material/styles';
+import { getAvatarDownloadBlob } from '../services/api';
+import { logEvent } from 'firebase/analytics';
+import { analytics } from '../services/firebase';
+import { useSnackbar } from '../hooks/useSnackbar';
 
 type AvatarViewProps = {
   imageUrl: string;
@@ -16,16 +16,15 @@ type AvatarViewProps = {
 };
 
 const sx: SxProps = {
-  width: "100%",
-  height: "100%",
+  width: '100%',
+  height: '100%',
   maxWidth: 400,
   maxHeight: 400,
-  WebkitTouchCallout: "none",
-  userSelect: "none",
-  WebkitUserSelect: "none"
+  WebkitTouchCallout: 'none',
+  userSelect: 'none',
+  WebkitUserSelect: 'none',
 };
 const TIMEOUT = 300;
-
 
 function generateUniqueFileName(): string {
   const timestamp = Date.now().toString();
@@ -50,11 +49,13 @@ export default function AvatarView({
     try {
       e.stopPropagation();
       setIsLoading(true);
-      logEvent(analytics, "download_image", { image_name: name });
+      logEvent(analytics, 'download_image', {
+        image_name: name,
+      });
 
       const blob = await getAvatarDownloadBlob(name);
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
       a.download = generateUniqueFileName();
       document.body.appendChild(a);
@@ -63,16 +64,19 @@ export default function AvatarView({
       URL.revokeObjectURL(url);
     } catch {
       showSnackbar({
-        message: "Download failed. Please try again later.",
-        severity: "error",
-        anchorOrigin: { vertical: "top", horizontal: "right" },
+        message: 'Download failed. Please try again later.',
+        severity: 'error',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
       });
     } finally {
       setIsLoading(false);
     }
   }
 
-  const onContextMenu: AvatarProps["onContextMenu"] = (e) => e.preventDefault();
+  const onContextMenu: AvatarProps['onContextMenu'] = (e) => e.preventDefault();
 
   return (
     <>
@@ -81,10 +85,13 @@ export default function AvatarView({
           <Box
             onClick={(e) => e.stopPropagation()}
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              paddingX: { xs: "10px", sm: 0 },
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              paddingX: {
+                xs: '10px',
+                sm: 0,
+              },
               gap: 2,
             }}
           >
@@ -100,10 +107,10 @@ export default function AvatarView({
 
             <Box
               sx={{
-                position: "relative",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
+                position: 'relative',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
               }}
             >
               {isLoading && (
@@ -111,7 +118,7 @@ export default function AvatarView({
                   color="secondary"
                   size={36}
                   sx={{
-                    position: "absolute",
+                    position: 'absolute',
                   }}
                 />
               )}
@@ -122,26 +129,26 @@ export default function AvatarView({
                   fullWidth
                   sx={{
                     background:
-                      "linear-gradient(135deg, #6A1B9A 0%, #FF4081 50%, #7C4DFF 100%)",
-                    color: "#FFFFFF",
-                    textTransform: "uppercase",
+                      'linear-gradient(135deg, #6A1B9A 0%, #FF4081 50%, #7C4DFF 100%)',
+                    color: '#FFFFFF',
+                    textTransform: 'uppercase',
                     letterSpacing: 2,
                     fontWeight: 700,
-                    borderRadius: "999px",
+                    borderRadius: '999px',
                     px: 4,
                     py: 1.5,
-                    boxShadow: "0 0 18px rgba(255, 64, 129, 0.7)",
-                    border: "1px solid rgba(255, 255, 255, 0.25)",
-                    transition: "all 0.2s ease-out",
-                    "&:hover": {
+                    boxShadow: '0 0 18px rgba(255, 64, 129, 0.7)',
+                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                    transition: 'all 0.2s ease-out',
+                    '&:hover': {
                       background:
-                        "linear-gradient(135deg, #4A148C 0%, #F50057 50%, #651FFF 100%)",
-                      boxShadow: "0 0 26px rgba(255, 64, 129, 1)",
-                      transform: "translateY(-2px) scale(1.03)",
+                        'linear-gradient(135deg, #4A148C 0%, #F50057 50%, #651FFF 100%)',
+                      boxShadow: '0 0 26px rgba(255, 64, 129, 1)',
+                      transform: 'translateY(-2px) scale(1.03)',
                     },
-                    "&:active": {
-                      transform: "translateY(0) scale(0.98)",
-                      boxShadow: "0 0 12px rgba(255, 64, 129, 0.6)",
+                    '&:active': {
+                      transform: 'translateY(0) scale(0.98)',
+                      boxShadow: '0 0 12px rgba(255, 64, 129, 0.6)',
                     },
                   }}
                   aria-label="Download avatar"

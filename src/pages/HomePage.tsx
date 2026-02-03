@@ -1,13 +1,13 @@
-import { Box, Grid, Fade } from "@mui/material";
-import { use, useCallback, useEffect, useState } from "react";
-import { getAvatars } from "../services/api";
-import AvatarCard from "../components/AvatarCard";
-import type { GridBaseProps } from "@mui/material/PigmentGrid";
-import AvatarView from "../components/AvatarView";
-import type { AvatarType } from "../types/avatar";
+import { Box, Grid, Fade } from '@mui/material';
+import { use, useCallback, useEffect, useState } from 'react';
+import { getAvatars } from '../services/api';
+import AvatarCard from '../components/AvatarCard';
+import type { GridBaseProps } from '@mui/material/PigmentGrid';
+import AvatarView from '../components/AvatarView';
+import type { AvatarType } from '../types/avatar';
 
 const avatarsPromise = getAvatars();
-const sizes: GridBaseProps["size"] = { xs: 4, md: 4, lg: 2 };
+const sizes: GridBaseProps['size'] = { xs: 4, md: 4, lg: 2 };
 const STAGGER = 80; // ms delay per item
 const ANIM_DURATION = 600;
 
@@ -19,8 +19,6 @@ export default function HomePage() {
   useEffect(() => {
     queueMicrotask(() => setShow(true));
   }, []);
-
-  // Preload avatar images so the large preview appears without network delay
 
   const handleClick = useCallback((avatar: AvatarType) => {
     setAvatar(avatar);
@@ -57,8 +55,8 @@ export default function HomePage() {
 
       <AvatarView
         open={avatar !== undefined}
-        imageUrl={avatar?.imageUrl ?? ""}
-        name={avatar?.name ?? ""}
+        imageUrl={avatar?.imageUrl ?? ''}
+        name={avatar?.name ?? ''}
         onClose={handleCloseAvatarDialog}
       />
     </>
