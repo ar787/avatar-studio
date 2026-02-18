@@ -1,27 +1,20 @@
-import { collection, getDocs } from 'firebase/firestore';
-import { db, storage } from './firebase';
-import { avatarConverter } from './avatarConverter';
-import { getBlob, ref } from 'firebase/storage';
+import type { AvatarType } from '../types/avatar';
 
 export const getAvatars = async () => {
-  const avatarsCollection = collection(db, 'avatars').withConverter(
-    avatarConverter,
-  );
-  const avatarList = (await getDocs(avatarsCollection)).docs.map((doc) =>
-    doc.data(),
-  );
+  const response = await fetch('/api/avatars');
+  const result = await response.json();
 
-  avatarList.forEach((a) => {
-    const img = new Image();
-    img.src = a.imageUrl;
-  });
-
-  return avatarList;
+  return result.data as AvatarType;
 };
 
 export const getAvatarDownloadBlob = async (path: string) => {
-  const BASE_PATH = 'avatars/';
-  const avatarRef = ref(storage, BASE_PATH + path + '.jpeg');
+  const response = await fetch(`/api/avatars/download/${path}.jpeg`);
 
-  return await getBlob(avatarRef);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message ?? 'Download failed');
+  }
+
+  const result = await response.blob();
+  return result;
 };
