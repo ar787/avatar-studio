@@ -1,12 +1,13 @@
 import Backdrop from '@mui/material/Backdrop';
 import Avatar, { type AvatarProps } from '@mui/material/Avatar';
 import { useState } from 'react';
-import { Button, Fade, Box, CircularProgress, Grow, Zoom } from '@mui/material';
+import { Fade, Box, CircularProgress, Grow, Zoom } from '@mui/material';
 import type { SxProps } from '@mui/material/styles';
 import { getAvatarDownloadBlob } from '../services/api';
 import { logEvent } from 'firebase/analytics';
 import { analytics } from '../services/firebase';
 import { useSnackbar } from '../hooks/useSnackbar';
+import { NeonButton } from './NeonButton';
 
 type AvatarViewProps = {
   imageUrl: string;
@@ -123,38 +124,14 @@ export default function AvatarView({
                 />
               )}
               <Grow in={!isLoading} timeout={300}>
-                <Button
-                  variant="contained"
+                <NeonButton
                   onClick={download}
                   fullWidth
-                  sx={{
-                    background:
-                      'linear-gradient(135deg, #6A1B9A 0%, #FF4081 50%, #7C4DFF 100%)',
-                    color: '#FFFFFF',
-                    textTransform: 'uppercase',
-                    letterSpacing: 2,
-                    fontWeight: 700,
-                    borderRadius: '999px',
-                    px: 4,
-                    py: 1.5,
-                    boxShadow: '0 0 18px rgba(255, 64, 129, 0.7)',
-                    border: '1px solid rgba(255, 255, 255, 0.25)',
-                    transition: 'all 0.2s ease-out',
-                    '&:hover': {
-                      background:
-                        'linear-gradient(135deg, #4A148C 0%, #F50057 50%, #651FFF 100%)',
-                      boxShadow: '0 0 26px rgba(255, 64, 129, 1)',
-                      transform: 'translateY(-2px) scale(1.03)',
-                    },
-                    '&:active': {
-                      transform: 'translateY(0) scale(0.98)',
-                      boxShadow: '0 0 12px rgba(255, 64, 129, 0.6)',
-                    },
-                  }}
                   aria-label="Download avatar"
+                  size="large"
                 >
                   Download
-                </Button>
+                </NeonButton>
               </Grow>
             </Box>
           </Box>
