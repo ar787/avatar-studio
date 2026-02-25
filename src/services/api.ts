@@ -7,6 +7,13 @@ export const getAvatars = async () => {
   return result.data as AvatarType[];
 };
 
+export const getGeneratedAvatars = async () => {
+  const response = await fetch('/api/avatars/generated-avatars');
+  const result = await response.json();
+
+  return result.data as (AvatarType & { extension: string })[];
+};
+
 export const getAvatarDownloadBlob = async (path: string) => {
   const response = await fetch(`/api/avatars/download/${path}.jpeg`);
 

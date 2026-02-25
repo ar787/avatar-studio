@@ -5,6 +5,7 @@ import { NeonButton } from './NeonButton';
 import NeonTextField from './NeonTextField';
 import { useState } from 'react';
 import { generateAvatar } from '../services/api';
+import { useNavigate } from '@tanstack/react-router';
 
 const containerSx: SxProps = {
   display: 'flex',
@@ -28,9 +29,11 @@ const WhiteNeonTextField = styled(NeonTextField)(() => ({
 
 export default function AvatarGenerator() {
   const [value, setValue] = useState('');
+  const navigate = useNavigate();
 
   function onGenerate() {
     generateAvatar(value);
+    navigate({ to: '/avatar-generation' });
   }
 
   return (
