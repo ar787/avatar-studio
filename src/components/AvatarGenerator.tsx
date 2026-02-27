@@ -1,11 +1,10 @@
+import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { Box, InputAdornment, Typography } from '@mui/material';
 import type { SxProps } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
-import { NeonButton } from './NeonButton';
-import NeonTextField from './NeonTextField';
-import { useState } from 'react';
 import { generateAvatar } from '../services/api';
-import { useNavigate } from '@tanstack/react-router';
+import Button from '@ui/components/Button';
+import TextField from '@ui/components/TextField';
 
 const containerSx: SxProps = {
   display: 'flex',
@@ -22,11 +21,6 @@ const inputContainerSx: SxProps = {
   maxWidth: '800px',
 };
 
-const WhiteNeonTextField = styled(NeonTextField)(() => ({
-  backgroundColor: '#fff',
-  '& .MuiInputBase-root': { paddingRight: '0px' },
-}));
-
 export default function AvatarGenerator() {
   const [value, setValue] = useState('');
   const navigate = useNavigate();
@@ -42,8 +36,9 @@ export default function AvatarGenerator() {
         Generate your avatar
       </Typography>
       <Box sx={inputContainerSx}>
-        <WhiteNeonTextField
+        <TextField
           fullWidth
+          animate
           hiddenLabel
           size="small"
           placeholder="Type a prompt..."
@@ -53,13 +48,13 @@ export default function AvatarGenerator() {
             input: {
               endAdornment: (
                 <InputAdornment position="start">
-                  <NeonButton
+                  <Button
                     disabled={value.trim().length === 0}
                     size="small"
                     onClick={onGenerate}
                   >
                     Generate
-                  </NeonButton>
+                  </Button>
                 </InputAdornment>
               ),
             },

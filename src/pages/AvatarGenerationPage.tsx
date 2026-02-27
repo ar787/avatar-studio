@@ -1,12 +1,12 @@
 import { use, useState } from 'react';
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
-import NeonTextField from '../components/NeonTextField';
-import { NeonButton } from '../components/NeonButton';
 import { generateAvatar, getGeneratedAvatars } from '../services/api';
 import type { SxProps } from '@mui/material/styles';
 import Grid, { type GridBaseProps } from '@mui/material/Grid';
 import HoverActionCard from '../components/HoverActionCard';
+import Button from '@ui/components/Button';
+import TextField from '@ui/components/TextField';
 
 const containerSx: SxProps = {
   display: 'flex',
@@ -28,28 +28,25 @@ export default function AvatarGenerationPage() {
 
   return (
     <Box sx={containerSx}>
-      <NeonTextField
+      <TextField
         fullWidth
+        animate
         hiddenLabel
         size="small"
         placeholder="Type a prompt..."
         value={value}
-        sx={{
-          backgroundColor: '#fff',
-          '& .MuiInputBase-root': { paddingRight: '0px' },
-        }}
         onChange={(e) => setValue(e.target.value)}
         slotProps={{
           input: {
             endAdornment: (
               <InputAdornment position="start">
-                <NeonButton
+                <Button
                   disabled={value.trim().length === 0}
                   size="small"
                   onClick={onGenerate}
                 >
                   Generate
-                </NeonButton>
+                </Button>
               </InputAdornment>
             ),
           },

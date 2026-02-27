@@ -1,16 +1,29 @@
-import { forwardRef } from 'react';
-import Button, { type ButtonProps } from '@mui/material/Button';
+import MuiButton from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-
+import { type ButtonProps, type ButtonProps as MuiButtonProps } from './Button';
 const paddingMap = {
   small: '4px 12px',
   medium: '8px 20px',
   large: '12px 32px',
 };
 
-const StyledButton = styled(Button)((props) => {
-  const size = props.size ?? 'medium';
+export interface StyledButtonProps extends Omit<MuiButtonProps, 'variant'> {
+  $variant?: ButtonProps['variant'];
+}
 
+export const StyledButton = styled(MuiButton, {
+  shouldForwardProp: (prop) => prop !== '$variant',
+})<StyledButtonProps>((props) => {
+  const size = props.size ?? 'medium';
+  if (props.$variant === 'primary') {
+    return {
+      color: '#fff',
+      fontWeight: 700,
+      textTransform: 'uppercase',
+      letterSpacing: 2,
+      borderRadius: 999,
+    };
+  }
   return {
     background:
       'linear-gradient(135deg, #6A1B9A 0%, #FF4081 50%, #7C4DFF 100%)',
@@ -28,11 +41,3 @@ const StyledButton = styled(Button)((props) => {
     },
   };
 });
-
-export const NeonButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  (props, ref) => {
-    return <StyledButton ref={ref} {...props} />;
-  },
-);
-
-NeonButton.displayName = 'NeonButton';

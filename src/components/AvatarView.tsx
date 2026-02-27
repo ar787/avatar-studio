@@ -7,7 +7,7 @@ import { getAvatarDownloadBlob } from '../services/api';
 import { logEvent } from 'firebase/analytics';
 import { analytics } from '../services/firebase';
 import { useSnackbar } from '../hooks/useSnackbar';
-import { NeonButton } from './NeonButton';
+import Button from '@ui/components/Button';
 
 type AvatarViewProps = {
   imageUrl: string;
@@ -124,14 +124,14 @@ export default function AvatarView({
                 />
               )}
               <Grow in={!isLoading} timeout={300}>
-                <NeonButton
+                <Button
                   onClick={download}
                   fullWidth
                   aria-label="Download avatar"
                   size="large"
                 >
                   Download
-                </NeonButton>
+                </Button>
               </Grow>
             </Box>
           </Box>
