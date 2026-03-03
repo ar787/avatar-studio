@@ -12,6 +12,7 @@ const neonBorderBefore = (animate: TextFieldProps['animate']) => ({
   content: '""',
   position: 'absolute',
   background: 'linear-gradient(270deg, #6A1B9A, #FF4081, #7C4DFF, #6A1B9A)',
+  backgroundPosition: animate ? undefined : '100% 50%',
   backgroundSize: '600% 600%',
   animation: animate ? `${gradientAnimation} 4s ease infinite` : 'none',
   pointerEvents: 'none',
@@ -26,7 +27,7 @@ export const StyledTextField = styled(MuiTextField)<TextFieldProps>(({
     '& .MuiOutlinedInput-root': {
       borderRadius: 8,
       backgroundColor: theme.palette.background.paper,
-      paddingRight: 0,
+      // paddingRight: 0,
       '& fieldset': { border: '2px solid transparent' },
       '&:hover fieldset, &.Mui-focused fieldset': {
         borderColor: 'transparent',

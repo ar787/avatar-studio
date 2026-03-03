@@ -1,4 +1,6 @@
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import type { AvatarType } from '../types/avatar';
+import { auth } from './firebase';
 
 export const getAvatars = async () => {
   const response = await fetch('/api/avatars');
@@ -36,4 +38,13 @@ export const generateAvatar = async (prompt: string) => {
   });
 
   return await response.json();
+};
+
+export const signUpUser = async (email: string, password: string) => {
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password,
+  );
+  return userCredential;
 };
