@@ -1,8 +1,14 @@
 import Container from '@mui/material/Container';
-import { Outlet, createRootRoute } from '@tanstack/react-router';
+import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
-export const Route = createRootRoute({
+import type { AuthState } from '../types/auth';
+
+type RouterContext = {
+  auth: AuthState;
+};
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
 });
 
