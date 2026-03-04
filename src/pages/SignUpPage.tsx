@@ -6,24 +6,20 @@ import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import { signUpUser } from '../services/api';
-import { useNavigate } from '@tanstack/react-router';
+import { useAuthForm } from '../hooks/useAuthForm';
+import { useSnackbar } from '../hooks/useSnackbar';
 
 export default function SignUp() {
   const [toggle, setToggle] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const navigate = useNavigate();
-
-  async function signUp() {
-    if (email.trim().length === 0 || password.trim().length === 0) {
-      return;
-    }
-    await signUpUser(email, password);
-
-    navigate({ to: '/' });
-  }
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
+  const { values, errors, loading, submit, setField } = useAuthForm({
+    onUnexpectedError: () =>
+      showSnackbar({
+        severity: 'error',
+        anchorOrigin: { horizontal: 'right', vertical: 'top' },
+        message: 'Some thing went wrong',
+      }),
+  });
 
   return (
     <Container
@@ -65,14 +61,22 @@ export default function SignUp() {
             <TextField
               placeholder="Email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={values.email}
+              helperText={errors.email}
+              error={errors.email.length !== 0}
+              onChange={(e) => {
+                setField('email', e.target.value);
+              }}
             />
             <TextField
               placeholder="Password"
               type={toggle ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={values.password}
+              onChange={(e) => {
+                setField('password', e.target.value);
+              }}
+              helperText={errors.password}
+              error={errors.password.length !== 0}
               slotProps={{
                 input: {
                   endAdornment: (
@@ -88,9 +92,12 @@ export default function SignUp() {
               }}
             />
           </Box>
-          <Button onClick={signUp}>Sign Up</Button>
+          <Button onClick={submit} loading={loading}>
+            Sign Up
+          </Button>
         </Box>
       </Box>
+      {SnackbarComponent}
     </Container>
   );
 }

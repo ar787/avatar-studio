@@ -53,5 +53,12 @@ export const StyledTextField = styled(MuiTextField)<TextFieldProps>(({
       borderRadius: 8,
       zIndex: 1,
     },
+
+    '& .MuiFormHelperText-root': {
+      color: '#fff',
+    },
+    '& .MuiFormHelperText-root.Mui-error': {
+      color: 'red',
+    },
   };
 });
