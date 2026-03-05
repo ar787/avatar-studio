@@ -8,13 +8,13 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { useAuthForm } from '../hooks/useAuthForm';
 import { useSnackbar } from '../hooks/useSnackbar';
-import { signUpUser } from '../services/api';
+import { signInUser } from '../services/api';
 
-export default function SignUp() {
+export default function SignInPage() {
   const [toggle, setToggle] = useState(false);
   const { showSnackbar, SnackbarComponent } = useSnackbar();
   const { values, errors, loading, submit, setField } = useAuthForm({
-    authAction: signUpUser,
+    authAction: signInUser,
     onUnexpectedError: () =>
       showSnackbar({
         severity: 'error',
@@ -38,7 +38,7 @@ export default function SignUp() {
         }}
       >
         <Typography variant="h2" color="#fff" align="center">
-          Create My Avatar
+          Sign In
         </Typography>
         <Box
           sx={{
@@ -95,7 +95,7 @@ export default function SignUp() {
             />
           </Box>
           <Button onClick={submit} loading={loading}>
-            Sign Up
+            Sign In
           </Button>
         </Box>
       </Box>

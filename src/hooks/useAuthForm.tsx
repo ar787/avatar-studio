@@ -1,13 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { signUpUser } from '../services/api';
+
 import { FirebaseError } from '@firebase/util';
 
-type UseAuthFormOptions = {
+type AsyncFunc = (email: string, password: string) => unknown;
+
+type UseAuthFormOptions<T> = {
+  authAction: T;
   onUnexpectedError?: () => void;
 };
 
-export function useAuthForm({ onUnexpectedError }: UseAuthFormOptions = {}) {
+export function useAuthForm<T extends AsyncFunc>({
+  authAction,
+  onUnexpectedError,
+}: UseAuthFormOptions<T>) {
   const navigate = useNavigate();
   const [values, setValues] = useState({
     email: '',
@@ -41,7 +47,8 @@ export function useAuthForm({ onUnexpectedError }: UseAuthFormOptions = {}) {
         return;
       }
       setLoading(true);
-      await signUpUser(values.email, values.password);
+
+      await authAction(values.email, values.password);
 
       navigate({ to: '/' });
     } catch (error) {
@@ -63,6 +70,18 @@ export function useAuthForm({ onUnexpectedError }: UseAuthFormOptions = {}) {
             setErrors((prev) => ({
               ...prev,
               email: 'The email address is badly formatted.',
+            }));
+            break;
+          case 'auth/wrong-password':
+            setErrors((prev) => ({
+              ...prev,
+              password: 'Invalid email or password',
+            }));
+            break;
+          case 'auth/user-not-found':
+            setErrors((prev) => ({
+              ...prev,
+              email: 'Invalid email or password',
             }));
             break;
           default:

@@ -58,7 +58,7 @@ export const StyledTextField = styled(MuiTextField)<TextFieldProps>(({
       color: '#fff',
     },
     '& .MuiFormHelperText-root.Mui-error': {
-      color: 'red',
+      color: theme.palette.error.light,
     },
   };
 });
