@@ -1,20 +1,20 @@
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 
-import { FirebaseError } from '@firebase/util';
+import { mapFirebaseAuthError } from '../utils/mapFirebaseAuthError';
 
 type AsyncFunc = (email: string, password: string) => unknown;
 
 type UseAuthFormOptions<T> = {
   authAction: T;
   onUnexpectedError?: () => void;
+  onSuccess?: () => void;
 };
 
 export function useAuthForm<T extends AsyncFunc>({
   authAction,
   onUnexpectedError,
+  onSuccess,
 }: UseAuthFormOptions<T>) {
-  const navigate = useNavigate();
   const [values, setValues] = useState({
     email: '',
     password: '',
@@ -49,44 +49,13 @@ export function useAuthForm<T extends AsyncFunc>({
       setLoading(true);
 
       await authAction(values.email, values.password);
-
-      navigate({ to: '/' });
+      onSuccess?.();
     } catch (error) {
-      if (error instanceof FirebaseError) {
-        switch (error.code) {
-          case 'auth/weak-password':
-            setErrors((prev) => ({
-              ...prev,
-              password: 'Password must be at least 6 characters.',
-            }));
-            break;
-          case 'auth/email-already-in-use':
-            setErrors((prev) => ({
-              ...prev,
-              email: 'This email is already registered.',
-            }));
-            break;
-          case 'auth/invalid-email':
-            setErrors((prev) => ({
-              ...prev,
-              email: 'The email address is badly formatted.',
-            }));
-            break;
-          case 'auth/wrong-password':
-            setErrors((prev) => ({
-              ...prev,
-              password: 'Invalid email or password',
-            }));
-            break;
-          case 'auth/user-not-found':
-            setErrors((prev) => ({
-              ...prev,
-              email: 'Invalid email or password',
-            }));
-            break;
-          default:
-            onUnexpectedError?.();
-        }
+      const mappedErrors = mapFirebaseAuthError(error);
+      if (mappedErrors) {
+        setErrors((prev) => ({ ...prev, ...mappedErrors }));
+      } else {
+        onUnexpectedError?.();
       }
     } finally {
       setLoading(false);

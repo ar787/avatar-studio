@@ -1,8 +1,8 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import SignUp from '../pages/SignUpPage';
+import SignUpPage from '../pages/SignUpPage';
 
 export const Route = createFileRoute('/sign-up')({
-  component: SignUp,
+  component: SignUpPage,
   beforeLoad: ({ context }) => {
     if (context.auth.isInitialLoading) {
       return;

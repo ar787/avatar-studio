@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { IconButton, Typography } from '@mui/material';
@@ -10,11 +11,15 @@ import { useAuthForm } from '../hooks/useAuthForm';
 import { useSnackbar } from '../hooks/useSnackbar';
 import { signUpUser } from '../services/api';
 
-export default function SignUp() {
+export default function SignUpPage() {
   const [toggle, setToggle] = useState(false);
+  const navigate = useNavigate();
   const { showSnackbar, SnackbarComponent } = useSnackbar();
   const { values, errors, loading, submit, setField } = useAuthForm({
     authAction: signUpUser,
+    onSuccess: () => {
+      navigate({ to: '/' });
+    },
     onUnexpectedError: () =>
       showSnackbar({
         severity: 'error',

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { IconButton, Typography } from '@mui/material';
@@ -12,9 +13,13 @@ import { signInUser } from '../services/api';
 
 export default function SignInPage() {
   const [toggle, setToggle] = useState(false);
+  const navigate = useNavigate();
   const { showSnackbar, SnackbarComponent } = useSnackbar();
   const { values, errors, loading, submit, setField } = useAuthForm({
     authAction: signInUser,
+    onSuccess: () => {
+      navigate({ to: '/' });
+    },
     onUnexpectedError: () =>
       showSnackbar({
         severity: 'error',
