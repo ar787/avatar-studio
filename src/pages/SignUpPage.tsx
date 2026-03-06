@@ -1,14 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import { IconButton, Typography } from '@mui/material';
-import Button from '@ui/components/Button';
-import TextField from '@ui/components/TextField';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+
+import Button from '@ui/components/Button';
+import TextField from '@ui/components/TextField';
+import Link from '@ui/components/Link';
+
 import { useAuthForm } from '../hooks/useAuthForm';
 import { useSnackbar } from '../hooks/useSnackbar';
+
 import { signUpUser } from '../services/api';
 
 export default function SignUpPage() {
@@ -16,6 +22,21 @@ export default function SignUpPage() {
   const navigate = useNavigate();
   const { showSnackbar, SnackbarComponent } = useSnackbar();
   const { values, errors, loading, submit, setField } = useAuthForm({
+    inputValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+    extraValidation: (values) => ({
+      email: [
+        [!values.email.includes('@'), 'Invalid email format'],
+        [values.email.endsWith('.temp'), 'Temporary emails are not allowed'],
+      ],
+      confirmPassword: [
+        values.confirmPassword !== values.password,
+        'Passwords do not match',
+      ],
+    }),
     authAction: signUpUser,
     onSuccess: () => {
       navigate({ to: '/' });
@@ -98,10 +119,34 @@ export default function SignUpPage() {
                 },
               }}
             />
+            <TextField
+              placeholder="Confirm password"
+              type={toggle ? 'text' : 'password'}
+              value={values.confirmPassword}
+              onChange={(e) => {
+                setField('confirmPassword', e.target.value);
+              }}
+              helperText={errors.confirmPassword}
+              error={errors.confirmPassword.length !== 0}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <IconButton onClick={() => setToggle((prev) => !prev)}>
+                      {toggle ? (
+                        <VisibilityOffOutlinedIcon />
+                      ) : (
+                        <VisibilityOutlinedIcon />
+                      )}
+                    </IconButton>
+                  ),
+                },
+              }}
+            />
           </Box>
           <Button onClick={submit} loading={loading}>
             Sign Up
           </Button>
+          <Link to="/sign-in">Already have an account? SIGN IN</Link>
         </Box>
       </Box>
       {SnackbarComponent}

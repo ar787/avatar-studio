@@ -1,14 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import { IconButton, Typography } from '@mui/material';
-import Button from '@ui/components/Button';
-import TextField from '@ui/components/TextField';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+
+import Button from '@ui/components/Button';
+import TextField from '@ui/components/TextField';
+import Link from '@ui/components/Link';
+
 import { useAuthForm } from '../hooks/useAuthForm';
 import { useSnackbar } from '../hooks/useSnackbar';
+
 import { signInUser } from '../services/api';
 
 export default function SignInPage() {
@@ -16,6 +22,16 @@ export default function SignInPage() {
   const navigate = useNavigate();
   const { showSnackbar, SnackbarComponent } = useSnackbar();
   const { values, errors, loading, submit, setField } = useAuthForm({
+    inputValues: {
+      email: '',
+      password: '',
+    },
+    extraValidation: (values) => ({
+      email: [
+        [!values.email.includes('@'), 'Invalid email format'],
+        [values.email.endsWith('.temp'), 'Temporary emails are not allowed'],
+      ],
+    }),
     authAction: signInUser,
     onSuccess: () => {
       navigate({ to: '/' });
@@ -102,6 +118,7 @@ export default function SignInPage() {
           <Button onClick={submit} loading={loading}>
             Sign In
           </Button>
+          <Link to="/sign-up">Do not have an account?</Link>
         </Box>
       </Box>
       {SnackbarComponent}

@@ -2,27 +2,31 @@ import { useState } from 'react';
 
 import { mapFirebaseAuthError } from '../utils/mapFirebaseAuthError';
 
-type AsyncFunc = (email: string, password: string) => unknown;
-
-type UseAuthFormOptions<T> = {
+type ValidationRule = [boolean, string];
+type ValidationSchema<V> = Partial<
+  Record<keyof V, ValidationRule | ValidationRule[]>
+>;
+type AuthActionFunc = (email: string, password: string) => unknown;
+type UseAuthFormOptions<T, V> = {
   authAction: T;
+  inputValues: V;
   onUnexpectedError?: () => void;
   onSuccess?: () => void;
+  extraValidation?: (args: V) => ValidationSchema<V>;
 };
 
-export function useAuthForm<T extends AsyncFunc>({
+export function useAuthForm<
+  T extends AuthActionFunc,
+  V extends Record<string, string>,
+>({
+  inputValues,
   authAction,
   onUnexpectedError,
   onSuccess,
-}: UseAuthFormOptions<T>) {
-  const [values, setValues] = useState({
-    email: '',
-    password: '',
-  });
-  const [errors, setErrors] = useState({
-    email: '',
-    password: '',
-  });
+  extraValidation,
+}: UseAuthFormOptions<T, V>) {
+  const [values, setValues] = useState(inputValues);
+  const [errors, setErrors] = useState<Record<keyof V, string>>(values);
   const [loading, setLoading] = useState(false);
 
   function setField<K extends keyof typeof values>(key: K, value: string) {
@@ -31,14 +35,36 @@ export function useAuthForm<T extends AsyncFunc>({
   }
 
   function validate() {
-    const newErrors = {
-      email: values.email.trim() ? '' : 'This field cannot be empty',
-      password: values.password.trim() ? '' : 'This field cannot be empty',
-    };
+    const newErrors = {} as Record<keyof V, string>;
+
+    (Object.keys(values) as Array<keyof V>).forEach((key) => {
+      const value = values[key];
+      newErrors[key] = value.trim() ? '' : 'This field cannot be empty';
+    });
+
+    const rules = (extraValidation?.(values) ?? {}) as Partial<
+      Record<keyof V, ValidationSchema<V>>
+    >;
+
+    (Object.keys(rules) as Array<keyof V>).forEach((key) => {
+      const ruleItem = rules[key];
+      if (ruleItem === undefined) {
+        return;
+      }
+
+      if (Array.isArray(ruleItem[0])) {
+        const ruleArray = ruleItem as ValidationRule[];
+        const failingRule = ruleArray.find((rule) => rule[0]);
+        newErrors[key] = failingRule ? failingRule[1] : '';
+      } else {
+        const ruleArray = ruleItem as ValidationRule;
+        const failingRule = ruleArray[0] ? ruleArray : undefined;
+        newErrors[key] = failingRule ? failingRule[1] : '';
+      }
+    });
 
     setErrors(newErrors);
-
-    return !newErrors.email && !newErrors.password;
+    return Object.keys(newErrors).every((key) => newErrors[key] === '');
   }
 
   async function submit() {
