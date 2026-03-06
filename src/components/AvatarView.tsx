@@ -6,7 +6,7 @@ import type { SxProps } from '@mui/material/styles';
 import { getAvatarDownloadBlob } from '../services/api';
 import { logEvent } from 'firebase/analytics';
 import { analytics } from '../services/firebase';
-import { useSnackbar } from '../hooks/useSnackbar';
+import { useSnackbar } from '@hooks/useSnackbar';
 import Button from '@ui/components/Button';
 
 type AvatarViewProps = {

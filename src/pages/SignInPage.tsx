@@ -12,8 +12,8 @@ import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 import Link from '@ui/components/Link';
 
-import { useAuthForm } from '../hooks/useAuthForm';
-import { useSnackbar } from '../hooks/useSnackbar';
+import { useAuthForm } from '@hooks/useAuthForm';
+import { useSnackbar } from '@hooks/useSnackbar';
 
 import { signInUser } from '../services/api';
 
@@ -118,7 +118,9 @@ export default function SignInPage() {
           <Button onClick={submit} loading={loading}>
             Sign In
           </Button>
-          <Link to="/sign-up">Do not have an account?</Link>
+          <Typography color="#fff">
+            Do not have an account? <Link to="/sign-up">Sign up</Link>
+          </Typography>
         </Box>
       </Box>
       {SnackbarComponent}

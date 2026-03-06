@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
 
-import { useAuth } from './hooks/useAuth';
+import { useAuth } from '@hooks/useAuth';
 import './index.css';
 
 // Set up a Router instance
