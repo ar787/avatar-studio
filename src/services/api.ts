@@ -4,6 +4,7 @@ import {
 } from 'firebase/auth';
 import type { AvatarType } from '../types/avatar';
 import { auth } from './firebase';
+import { tokenManager } from '../utils/tokenManager';
 
 export const getAvatars = async () => {
   const response = await fetch('/api/avatars');
@@ -13,7 +14,14 @@ export const getAvatars = async () => {
 };
 
 export const getGeneratedAvatars = async () => {
-  const response = await fetch('/api/avatars/generated-avatars');
+  const token = await tokenManager.getToken();
+
+  const response = await fetch('/api/avatars/generated-avatars', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   const result = await response.json();
 
   return result.data as (AvatarType & { extension: string })[];
