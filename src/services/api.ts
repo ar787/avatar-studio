@@ -1,7 +1,9 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } from 'firebase/auth';
+
 import type { AvatarType } from '../types/avatar';
 import { auth } from './firebase';
 import { tokenManager } from '../utils/tokenManager';
@@ -63,4 +65,8 @@ export const signUpUser = async (email: string, password: string) => {
 export const signInUser = async (email: string, password: string) => {
   const userCredential = signInWithEmailAndPassword(auth, email, password);
   return userCredential;
+};
+
+export const signOutUser = async () => {
+  await signOut(auth);
 };

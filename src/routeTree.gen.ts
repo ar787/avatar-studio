@@ -11,8 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
-import { Route as AvatarGenerationRouteImport } from './routes/avatar-generation'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as LayoutRouteImport } from './routes/_layout'
+import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as LayoutAvatarGenerationRouteImport } from './routes/_layout/avatar-generation'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -24,47 +25,57 @@ const SignInRoute = SignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AvatarGenerationRoute = AvatarGenerationRouteImport.update({
-  id: '/avatar-generation',
-  path: '/avatar-generation',
+const LayoutRoute = LayoutRouteImport.update({
+  id: '/_layout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const LayoutIndexRoute = LayoutIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutAvatarGenerationRoute = LayoutAvatarGenerationRouteImport.update({
+  id: '/avatar-generation',
+  path: '/avatar-generation',
+  getParentRoute: () => LayoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/avatar-generation': typeof AvatarGenerationRoute
+  '/': typeof LayoutIndexRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/avatar-generation': typeof LayoutAvatarGenerationRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/avatar-generation': typeof AvatarGenerationRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/avatar-generation': typeof LayoutAvatarGenerationRoute
+  '/': typeof LayoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/avatar-generation': typeof AvatarGenerationRoute
+  '/_layout': typeof LayoutRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/_layout/avatar-generation': typeof LayoutAvatarGenerationRoute
+  '/_layout/': typeof LayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/avatar-generation' | '/sign-in' | '/sign-up'
+  fullPaths: '/' | '/sign-in' | '/sign-up' | '/avatar-generation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/avatar-generation' | '/sign-in' | '/sign-up'
-  id: '__root__' | '/' | '/avatar-generation' | '/sign-in' | '/sign-up'
+  to: '/sign-in' | '/sign-up' | '/avatar-generation' | '/'
+  id:
+    | '__root__'
+    | '/_layout'
+    | '/sign-in'
+    | '/sign-up'
+    | '/_layout/avatar-generation'
+    | '/_layout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AvatarGenerationRoute: typeof AvatarGenerationRoute
+  LayoutRoute: typeof LayoutRouteWithChildren
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
 }
@@ -85,26 +96,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/avatar-generation': {
-      id: '/avatar-generation'
-      path: '/avatar-generation'
-      fullPath: '/avatar-generation'
-      preLoaderRoute: typeof AvatarGenerationRouteImport
+    '/_layout': {
+      id: '/_layout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_layout/': {
+      id: '/_layout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof LayoutIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/avatar-generation': {
+      id: '/_layout/avatar-generation'
+      path: '/avatar-generation'
+      fullPath: '/avatar-generation'
+      preLoaderRoute: typeof LayoutAvatarGenerationRouteImport
+      parentRoute: typeof LayoutRoute
     }
   }
 }
 
+interface LayoutRouteChildren {
+  LayoutAvatarGenerationRoute: typeof LayoutAvatarGenerationRoute
+  LayoutIndexRoute: typeof LayoutIndexRoute
+}
+
+const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutAvatarGenerationRoute: LayoutAvatarGenerationRoute,
+  LayoutIndexRoute: LayoutIndexRoute,
+}
+
+const LayoutRouteWithChildren =
+  LayoutRoute._addFileChildren(LayoutRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AvatarGenerationRoute: AvatarGenerationRoute,
+  LayoutRoute: LayoutRouteWithChildren,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
 }

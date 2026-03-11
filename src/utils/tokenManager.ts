@@ -1,4 +1,3 @@
-// tokenManager.ts
 import { auth } from '../services/firebase';
 import { onIdTokenChanged, type User } from 'firebase/auth';
 

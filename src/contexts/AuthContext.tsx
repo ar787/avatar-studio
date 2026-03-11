@@ -5,4 +5,5 @@ export const AuthContext = createContext<AuthState>({
   currentUser: null,
   isAuthenticated: false,
   isInitialLoading: true,
+  logOut: () => Promise.resolve(),
 });

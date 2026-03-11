@@ -1,4 +1,3 @@
-import Container from '@mui/material/Container';
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
@@ -14,9 +13,9 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootComponent() {
   return (
-    <Container fixed maxWidth={false}>
+    <>
       <Outlet />
       <TanStackRouterDevtools position="bottom-right" />
-    </Container>
+    </>
   );
 }
