@@ -14,13 +14,13 @@ import Link from '@ui/components/Link';
 
 import { useAuthForm } from '@hooks/useAuthForm';
 import { useSnackbar } from '@hooks/useSnackbar';
-
-import { signInUser } from '../services/api';
+import { useAuth } from '@hooks/useAuth';
 
 export default function SignInPage() {
   const [toggle, setToggle] = useState(false);
   const navigate = useNavigate();
   const { showSnackbar, SnackbarComponent } = useSnackbar();
+  const { signIn } = useAuth();
   const { values, errors, loading, submit, setField } = useAuthForm({
     inputValues: {
       email: '',
@@ -32,7 +32,7 @@ export default function SignInPage() {
         [values.email.endsWith('.temp'), 'Temporary emails are not allowed'],
       ],
     }),
-    authAction: signInUser,
+    authAction: signIn,
     onSuccess: () => {
       navigate({ to: '/' });
     },
@@ -40,7 +40,7 @@ export default function SignInPage() {
       showSnackbar({
         severity: 'error',
         anchorOrigin: { horizontal: 'right', vertical: 'top' },
-        message: 'Something went wrong',
+        message: 'Something went wrong. Please try again later.',
       }),
   });
 

@@ -9,7 +9,7 @@ import {
 import { auth } from '../services/firebase';
 import { AuthContext } from '../contexts/AuthContext';
 import type { AuthState } from '../types/auth';
-import { signOutUser } from '../services/api';
+import { signOutUser, signInUser, signUpUser } from '../services/api';
 
 export const AuthProvider = ({ children }: { children: ReactElement }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -29,14 +29,24 @@ export const AuthProvider = ({ children }: { children: ReactElement }) => {
     await signOutUser();
   }, []);
 
+  const signIn = useCallback((email: string, password: string) => {
+    return signInUser(email, password);
+  }, []);
+
+  const signUp = useCallback((email: string, password: string) => {
+    return signUpUser(email, password);
+  }, []);
+
   const value: AuthState = useMemo(() => {
     return {
       currentUser,
       isAuthenticated: currentUser !== null,
       isInitialLoading,
       logOut,
+      signIn,
+      signUp,
     };
-  }, [currentUser, isInitialLoading, logOut]);
+  }, [currentUser, isInitialLoading, logOut, signIn, signUp]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

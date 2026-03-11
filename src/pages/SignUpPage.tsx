@@ -12,14 +12,13 @@ import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 import Link from '@ui/components/Link';
 
-import { useSnackbar, useAuthForm } from '@hooks';
-
-import { signUpUser } from '../services/api';
+import { useSnackbar, useAuthForm, useAuth } from '@hooks';
 
 export default function SignUpPage() {
   const [toggle, setToggle] = useState(false);
   const navigate = useNavigate();
   const { showSnackbar, SnackbarComponent } = useSnackbar();
+  const { signUp } = useAuth();
   const { values, errors, loading, submit, setField } = useAuthForm({
     inputValues: {
       email: '',
@@ -36,7 +35,7 @@ export default function SignUpPage() {
         'Passwords do not match',
       ],
     }),
-    authAction: signUpUser,
+    authAction: signUp,
     onSuccess: () => {
       navigate({ to: '/' });
     },
@@ -44,7 +43,7 @@ export default function SignUpPage() {
       showSnackbar({
         severity: 'error',
         anchorOrigin: { horizontal: 'right', vertical: 'top' },
-        message: 'Something went wrong',
+        message: 'Something went wrong. Please try again later.',
       }),
   });
 
