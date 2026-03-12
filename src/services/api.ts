@@ -4,7 +4,7 @@ import {
   signOut,
 } from 'firebase/auth';
 
-import type { AvatarType } from '../types/avatar';
+import type { AvatarType, GeneratedAvatarType } from '../types/avatar';
 import { auth } from './firebase';
 import { tokenManager } from '../utils/tokenManager';
 
@@ -26,7 +26,7 @@ export const getGeneratedAvatars = async () => {
 
   const result = await response.json();
 
-  return result.data as (AvatarType & { extension: string })[];
+  return result.data as GeneratedAvatarType[];
 };
 
 export const getAvatarDownloadBlob = async (path: string) => {

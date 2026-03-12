@@ -8,3 +8,5 @@ export type AvatarType = {
   imageUrl: FirebaseStorageUrl;
   name: string;
 };
+
+export type GeneratedAvatarType = AvatarType & { extension: string };

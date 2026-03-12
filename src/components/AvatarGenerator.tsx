@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Box, InputAdornment, Typography } from '@mui/material';
 import type { SxProps } from '@mui/material/styles';
-import { generateAvatar } from '../services/api';
+
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 
@@ -26,8 +26,12 @@ export default function AvatarGenerator() {
   const navigate = useNavigate();
 
   function onGenerate() {
-    generateAvatar(value);
-    navigate({ to: '/avatar-generation' });
+    navigate({
+      to: '/avatar-generation',
+      state: {
+        prompt: value,
+      },
+    });
   }
 
   return (

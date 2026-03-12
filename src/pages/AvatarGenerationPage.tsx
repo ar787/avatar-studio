@@ -1,12 +1,21 @@
-import { use, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from '@tanstack/react-router';
 import Box from '@mui/material/Box';
+import Skeleton from '@mui/material/Skeleton';
 import InputAdornment from '@mui/material/InputAdornment';
-import { generateAvatar, getGeneratedAvatars } from '../services/api';
 import type { SxProps } from '@mui/material/styles';
 import Grid, { type GridBaseProps } from '@mui/material/Grid';
+
+import { generateAvatar, getGeneratedAvatars } from '../services/api';
 import HoverActionCard from '../components/HoverActionCard';
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
+
+import type { GeneratedAvatarType } from '../types/avatar';
 
 const containerSx: SxProps = {
   display: 'flex',
@@ -16,15 +25,46 @@ const containerSx: SxProps = {
   paddingTop: '10px',
 };
 
-const getGeneratedAvatarsPromise = getGeneratedAvatars();
 const sizes: GridBaseProps['size'] = { xs: 4, md: 4, lg: 2 };
 
 export default function AvatarGenerationPage() {
-  const [value, setValue] = useState('');
+  const initialData = useLoaderData({ from: '/_layout/avatar-generation' });
+  const { state } = useLocation();
+  const navigate = useNavigate();
 
-  function onGenerate() {
-    generateAvatar(value);
-  }
+  const [value, setValue] = useState('');
+  const [isAvatarGenerated, setIsAvatarGenerated] = useState(false);
+  const [list, setList] = useState(initialData);
+
+  const generationStarted = useRef(false);
+
+  const handleGenerate = useCallback(
+    async (prompt: string) => {
+      if (!prompt) return;
+      setIsAvatarGenerated(true);
+      generationStarted.current = true;
+      try {
+        await generateAvatar(prompt);
+        const res = await getGeneratedAvatars();
+        setList(res);
+      } finally {
+        generationStarted.current = false;
+        setIsAvatarGenerated(false);
+        setValue('');
+        navigate({
+          to: '/avatar-generation',
+          state: (prev) => ({ ...prev, prompt: undefined }),
+          replace: true,
+        });
+      }
+    },
+    [navigate],
+  );
+
+  useEffect(() => {
+    if (state.prompt && generationStarted.current === false)
+      handleGenerate(state.prompt);
+  }, [state.prompt, handleGenerate]);
 
   return (
     <Box sx={containerSx}>
@@ -41,9 +81,9 @@ export default function AvatarGenerationPage() {
             endAdornment: (
               <InputAdornment position="start">
                 <Button
-                  disabled={value.trim().length === 0}
+                  disabled={value.trim().length === 0 || isAvatarGenerated}
                   size="small"
-                  onClick={onGenerate}
+                  onClick={() => handleGenerate(value)}
                 >
                   Generate
                 </Button>
@@ -52,16 +92,32 @@ export default function AvatarGenerationPage() {
           },
         }}
       />
-      <AvatarCardList />
+      <AvatarCardList list={list} loading={isAvatarGenerated} />
     </Box>
   );
 }
 
-function AvatarCardList() {
-  const data = use(getGeneratedAvatarsPromise);
+type AvatarCardListProps = {
+  list: GeneratedAvatarType[];
+  loading: boolean;
+};
+
+function AvatarCardList({ list, loading }: AvatarCardListProps) {
   return (
     <Grid container spacing={2} sx={{ mt: 4 }}>
-      {data.map((avatar) => (
+      {loading && (
+        <Grid size={sizes} sx={{ width: 320 }}>
+          <Skeleton
+            sx={{
+              bgcolor: 'grey.900',
+              borderRadius: '16px',
+              height: { xs: '320px', sm: '100%' },
+            }}
+            variant="rectangular"
+          />
+        </Grid>
+      )}
+      {list.map((avatar) => (
         <Grid size={sizes} key={avatar.name} sx={{ width: 320 }}>
           <HoverActionCard src={avatar.imageUrl} />
         </Grid>
