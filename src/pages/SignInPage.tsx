@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 
-import Container from '@mui/material/Container';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 
 import Button from '@ui/components/Button';
@@ -16,7 +14,8 @@ import Link from '@ui/components/Link';
 import { useAuthForm } from '@hooks/useAuthForm';
 import { useSnackbar } from '@hooks/useSnackbar';
 import { useAuth } from '@hooks/useAuth';
-import Box from '@mui/material/Box';
+
+import AuthLayout from '../layout/AuthLayout';
 
 export default function SignInPage() {
   const [toggle, setToggle] = useState(false);
@@ -46,90 +45,55 @@ export default function SignInPage() {
       }),
   });
 
+  const submitAction = (
+    <Button onClick={submit} loading={loading} size="large">
+      Sign In
+    </Button>
+  );
+
+  const footer = (
+    <Typography color="#fff">
+      Do not have an account? <Link to="/sign-up">Sign up</Link>
+    </Typography>
+  );
+
   return (
-    <Box
-      sx={{
-        background:
-          'linear-gradient(0deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.62) 100%), rgb(70,70,70)',
-      }}
-    >
-      <Container
-        disableGutters
-        sx={{
-          height: '100vh',
-          minHeight: 'calc(100vh - 74px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative',
-          px: { xs: 2, sm: 3 },
-          py: { xs: 2, sm: 4 },
-        }}
-      >
-        <Paper
-          sx={{
-            minWidth: 480,
-            p: 4,
-            borderRadius: '24px',
-            backgroundColor: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(10px)',
-            boxShadow: '0px 8px 32px rgba(0,0,0,0.3)',
+    <AuthLayout title="Sign In" submitAction={submitAction} footer={footer}>
+      <Stack spacing={2}>
+        <TextField
+          placeholder="Email"
+          type="email"
+          value={values.email}
+          helperText={errors.email}
+          error={errors.email.length !== 0}
+          onChange={(e) => setField('email', e.target.value)}
+        />
+
+        <TextField
+          required
+          placeholder="Password"
+          type={toggle ? 'text' : 'password'}
+          value={values.password}
+          helperText={errors.password}
+          error={errors.password.length !== 0}
+          onChange={(e) => setField('password', e.target.value)}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <IconButton onClick={() => setToggle((p) => !p)}>
+                  {toggle ? (
+                    <VisibilityOffOutlinedIcon />
+                  ) : (
+                    <VisibilityOutlinedIcon />
+                  )}
+                </IconButton>
+              ),
+            },
           }}
-        >
-          <Stack spacing={4}>
-            <Typography variant="h2" color="#fff" textAlign="center">
-              Sign In
-            </Typography>
+        />
+      </Stack>
 
-            <Stack spacing={2}>
-              <TextField
-                placeholder="Email"
-                type="email"
-                value={values.email}
-                helperText={errors.email}
-                error={errors.email.length !== 0}
-                onChange={(e) => setField('email', e.target.value)}
-              />
-
-              <TextField
-                required
-                placeholder="Password"
-                type={toggle ? 'text' : 'password'}
-                value={values.password}
-                helperText={errors.password}
-                error={errors.password.length !== 0}
-                onChange={(e) => setField('password', e.target.value)}
-                slotProps={{
-                  input: {
-                    endAdornment: (
-                      <IconButton onClick={() => setToggle((p) => !p)}>
-                        {toggle ? (
-                          <VisibilityOffOutlinedIcon />
-                        ) : (
-                          <VisibilityOutlinedIcon />
-                        )}
-                      </IconButton>
-                    ),
-                  },
-                }}
-              />
-            </Stack>
-
-            <Stack spacing={1}>
-              <Button onClick={submit} loading={loading} size="large">
-                Sign In
-              </Button>
-
-              <Typography color="#fff">
-                Do not have an account? <Link to="/sign-up">Sign up</Link>
-              </Typography>
-            </Stack>
-          </Stack>
-        </Paper>
-
-        {SnackbarComponent}
-      </Container>
-    </Box>
+      {SnackbarComponent}
+    </AuthLayout>
   );
 }

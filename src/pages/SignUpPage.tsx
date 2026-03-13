@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -13,6 +11,8 @@ import TextField from '@ui/components/TextField';
 import Link from '@ui/components/Link';
 
 import { useSnackbar, useAuthForm, useAuth } from '@hooks';
+import AuthLayout from '../layout/AuthLayout';
+import Stack from '@mui/material/Stack';
 
 export default function SignUpPage() {
   const [toggle, setToggle] = useState(false);
@@ -47,109 +47,80 @@ export default function SignUpPage() {
       }),
   });
 
+  const submitAction = (
+    <Button onClick={submit} loading={loading} size="large">
+      Sign Up
+    </Button>
+  );
+
+  const footer = (
+    <Typography color="#fff">
+      Already have an account? <Link to="/sign-in">Sign in</Link>
+    </Typography>
+  );
+
   return (
-    <Container
-      sx={{
-        paddingTop: '30vh',
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '8px',
-        }}
-      >
-        <Typography variant="h2" color="#fff" align="center">
-          Create My Avatar
-        </Typography>
-        <Box
-          sx={{
-            width: { xs: '100%', md: '50%' },
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            border: '1px solid transparent',
-            position: 'relative',
-            padding: 5,
-            gap: '16px',
+    <AuthLayout title="Sign Up" submitAction={submitAction} footer={footer}>
+      <Stack spacing={2}>
+        <TextField
+          placeholder="Email"
+          type="email"
+          value={values.email}
+          helperText={errors.email}
+          error={errors.email.length !== 0}
+          onChange={(e) => {
+            setField('email', e.target.value);
           }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              gap: '10px',
-            }}
-          >
-            <TextField
-              placeholder="Email"
-              type="email"
-              value={values.email}
-              helperText={errors.email}
-              error={errors.email.length !== 0}
-              onChange={(e) => {
-                setField('email', e.target.value);
-              }}
-            />
-            <TextField
-              placeholder="Password"
-              type={toggle ? 'text' : 'password'}
-              value={values.password}
-              onChange={(e) => {
-                setField('password', e.target.value);
-              }}
-              helperText={errors.password}
-              error={errors.password.length !== 0}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <IconButton onClick={() => setToggle((prev) => !prev)}>
-                      {toggle ? (
-                        <VisibilityOffOutlinedIcon />
-                      ) : (
-                        <VisibilityOutlinedIcon />
-                      )}
-                    </IconButton>
-                  ),
-                },
-              }}
-            />
-            <TextField
-              placeholder="Confirm password"
-              type={toggle ? 'text' : 'password'}
-              value={values.confirmPassword}
-              onChange={(e) => {
-                setField('confirmPassword', e.target.value);
-              }}
-              helperText={errors.confirmPassword}
-              error={errors.confirmPassword.length !== 0}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <IconButton onClick={() => setToggle((prev) => !prev)}>
-                      {toggle ? (
-                        <VisibilityOffOutlinedIcon />
-                      ) : (
-                        <VisibilityOutlinedIcon />
-                      )}
-                    </IconButton>
-                  ),
-                },
-              }}
-            />
-          </Box>
-          <Button onClick={submit} loading={loading}>
-            Sign Up
-          </Button>
-          <Typography color="#fff">
-            Already have an account? <Link to="/sign-in">Sign in</Link>
-          </Typography>
-        </Box>
-      </Box>
+        />
+        <TextField
+          placeholder="Password"
+          type={toggle ? 'text' : 'password'}
+          value={values.password}
+          onChange={(e) => {
+            setField('password', e.target.value);
+          }}
+          helperText={errors.password}
+          error={errors.password.length !== 0}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <IconButton onClick={() => setToggle((prev) => !prev)}>
+                  {toggle ? (
+                    <VisibilityOffOutlinedIcon />
+                  ) : (
+                    <VisibilityOutlinedIcon />
+                  )}
+                </IconButton>
+              ),
+            },
+          }}
+        />
+        <TextField
+          placeholder="Confirm password"
+          type={toggle ? 'text' : 'password'}
+          value={values.confirmPassword}
+          onChange={(e) => {
+            setField('confirmPassword', e.target.value);
+          }}
+          helperText={errors.confirmPassword}
+          error={errors.confirmPassword.length !== 0}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <IconButton onClick={() => setToggle((prev) => !prev)}>
+                  {toggle ? (
+                    <VisibilityOffOutlinedIcon />
+                  ) : (
+                    <VisibilityOutlinedIcon />
+                  )}
+                </IconButton>
+              ),
+            },
+          }}
+        />
+      </Stack>
+
       {SnackbarComponent}
-    </Container>
+    </AuthLayout>
   );
 }
