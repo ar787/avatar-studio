@@ -117,7 +117,7 @@ export default function SignInPage() {
             </Stack>
 
             <Stack spacing={1}>
-              <Button onClick={submit} loading={loading}>
+              <Button onClick={submit} loading={loading} size="large">
                 Sign In
               </Button>
 
