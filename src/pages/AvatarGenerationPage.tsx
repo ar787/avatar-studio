@@ -22,7 +22,7 @@ const containerSx: SxProps = {
   flexDirection: 'column',
   alignItems: 'center',
   gap: '8px',
-  paddingTop: '10px',
+  paddingTop: 5,
 };
 
 const sizes: GridBaseProps['size'] = { xs: 4, md: 4, lg: 2 };

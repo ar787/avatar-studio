@@ -10,9 +10,12 @@ import {
   Box,
   CircularProgress,
 } from '@mui/material';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useAuth } from '@hooks/useAuth';
 import { useSnackbar } from '@hooks/useSnackbar';
+
+import Button from '@ui/components/Button';
 
 export default function HeaderBar() {
   const navigate = useNavigate();
@@ -47,19 +50,33 @@ export default function HeaderBar() {
 
   return (
     <>
-      <AppBar
-        position="static"
-        sx={{
-          background:
-            'linear-gradient(135deg, #6A1B9A 0%, #FF4081 50%, #7C4DFF 100%)',
-        }}
-      >
+      <AppBar position="fixed" color="transparent">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, color: '#7C4DFF' }}
+          >
             My Profile
           </Typography>
 
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              color: '#7C4DFF',
+              gap: '10px',
+            }}
+          >
+            <Button
+              variant="outlined"
+              endIcon={<PhotoLibraryIcon />}
+              onClick={() => {
+                navigate({ to: '/avatar-generation' });
+              }}
+            >
+              Library
+            </Button>
             <IconButton onClick={handleOpenMenu} color="inherit">
               <AccountCircle />
             </IconButton>

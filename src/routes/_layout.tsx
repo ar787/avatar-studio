@@ -10,18 +10,18 @@ export const Route = createFileRoute('/_layout')({
 function RouteComponent() {
   return (
     <>
-      <HeaderBar />
       <Box
         sx={{
           background:
             'linear-gradient(0deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.62) 100%), rgb(70,70,70)',
         }}
       >
+        <HeaderBar />
         <Container
           fixed
           maxWidth={false}
           sx={{
-            height: 'calc(100vh - 64px)',
+            height: '100vh',
             position: 'relative',
             px: { xs: 2, sm: 3 },
             py: { xs: 2, sm: 4 },
