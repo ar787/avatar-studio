@@ -16,6 +16,7 @@ import { useAuth } from '@hooks/useAuth';
 import { useSnackbar } from '@hooks/useSnackbar';
 
 import Button from '@ui/components/Button';
+import Link from '@ui/components/Link';
 
 export default function HeaderBar() {
   const navigate = useNavigate();
@@ -52,14 +53,13 @@ export default function HeaderBar() {
     <>
       <AppBar position="fixed" color="transparent">
         <Toolbar>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, color: '#7C4DFF' }}
-          >
-            My Profile
-          </Typography>
-
+          <Box sx={{ flexGrow: 1 }}>
+            <Link to="/">
+              <Typography variant="h6" component="span">
+                My Profile
+              </Typography>
+            </Link>
+          </Box>
           <Box
             sx={{
               display: 'flex',
