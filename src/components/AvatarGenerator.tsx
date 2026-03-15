@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Box, InputAdornment, Typography } from '@mui/material';
+import { Box, InputAdornment, Tooltip, Typography } from '@mui/material';
 import type { SxProps } from '@mui/material/styles';
 
 import Button from '@ui/components/Button';
@@ -51,15 +51,17 @@ export default function AvatarGenerator() {
           slotProps={{
             input: {
               endAdornment: (
-                <InputAdornment position="start">
-                  <Button
-                    disabled={value.trim().length === 0}
-                    size="small"
-                    onClick={onGenerate}
-                  >
-                    Generate
-                  </Button>
-                </InputAdornment>
+                <Tooltip title="Sign in to generate" arrow>
+                  <InputAdornment position="start">
+                    <Button
+                      disabled={value.trim().length === 0}
+                      size="small"
+                      onClick={onGenerate}
+                    >
+                      Generate
+                    </Button>
+                  </InputAdornment>
+                </Tooltip>
               ),
             },
           }}
