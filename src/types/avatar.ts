@@ -9,4 +9,10 @@ export type AvatarType = {
   name: string;
 };
 
-export type GeneratedAvatarType = AvatarType & { extension: string };
+export type GeneratedAvatarType = {
+  url: string;
+  name: string;
+  prompt: string;
+  extension: 'png';
+  createdAt: Date;
+};

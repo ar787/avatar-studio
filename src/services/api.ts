@@ -42,9 +42,11 @@ export const getAvatarDownloadBlob = async (path: string) => {
 };
 
 export const generateAvatar = async (prompt: string) => {
+  const token = await tokenManager.getToken();
   const response = await fetch('/api/avatars/generate', {
     method: 'POST',
     headers: {
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ prompt }),
@@ -69,4 +71,16 @@ export const signInUser = async (email: string, password: string) => {
 
 export const signOutUser = async () => {
   await signOut(auth);
+};
+
+export const createUserDocument = async () => {
+  const token = await tokenManager.getToken();
+  const response = await fetch('/api/auth/createUserDocument', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return await response.json();
 };

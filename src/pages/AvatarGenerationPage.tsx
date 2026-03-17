@@ -119,7 +119,7 @@ function AvatarCardList({ list, loading }: AvatarCardListProps) {
       )}
       {list.map((avatar) => (
         <Grid size={sizes} key={avatar.name} sx={{ width: 320 }}>
-          <HoverActionCard src={avatar.imageUrl} />
+          <HoverActionCard src={avatar.url} />
         </Grid>
       ))}
     </Grid>
