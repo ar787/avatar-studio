@@ -5,6 +5,7 @@ import type { SxProps } from '@mui/material/styles';
 
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
+import { useAuth } from '@hooks/useAuth';
 
 const containerSx: SxProps = {
   display: 'flex',
@@ -23,6 +24,7 @@ const inputContainerSx: SxProps = {
 
 export default function AvatarGenerator() {
   const [value, setValue] = useState('');
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   function onGenerate() {
@@ -51,7 +53,10 @@ export default function AvatarGenerator() {
           slotProps={{
             input: {
               endAdornment: (
-                <Tooltip title="Sign in to generate" arrow>
+                <Tooltip
+                  title={!isAuthenticated ? 'Sign in to generate' : ''}
+                  arrow
+                >
                   <InputAdornment position="start">
                     <Button
                       disabled={value.trim().length === 0}
