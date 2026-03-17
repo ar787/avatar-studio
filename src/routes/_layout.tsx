@@ -21,7 +21,7 @@ function RouteComponent() {
           fixed
           maxWidth={false}
           sx={{
-            height: '100vh',
+            minHeight: '100vh',
             position: 'relative',
             px: { xs: 2, sm: 3 },
             py: { xs: 2, sm: 4 },

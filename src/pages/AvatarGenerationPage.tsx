@@ -25,7 +25,7 @@ const containerSx: SxProps = {
   paddingTop: 5,
 };
 
-const sizes: GridBaseProps['size'] = { xs: 4, md: 4, lg: 2 };
+const sizes: GridBaseProps['size'] = { xs: 6, md: 4, lg: 3 };
 
 export default function AvatarGenerationPage() {
   const initialData = useLoaderData({ from: '/_layout/avatar-generation' });
@@ -106,19 +106,19 @@ function AvatarCardList({ list, loading }: AvatarCardListProps) {
   return (
     <Grid container spacing={2} sx={{ mt: 4 }}>
       {loading && (
-        <Grid size={sizes} sx={{ width: 320 }}>
+        <Grid size={sizes}>
           <Skeleton
             sx={{
               bgcolor: 'grey.900',
               borderRadius: '16px',
-              height: { xs: '320px', sm: '100%' },
+              height: { xs: '226px', sm: '100%' },
             }}
             variant="rectangular"
           />
         </Grid>
       )}
       {list.map((avatar) => (
-        <Grid size={sizes} key={avatar.name} sx={{ width: 320 }}>
+        <Grid size={sizes} key={avatar.name}>
           <HoverActionCard src={avatar.url} />
         </Grid>
       ))}
