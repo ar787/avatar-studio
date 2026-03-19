@@ -4,6 +4,9 @@ import ShareIcon from '@mui/icons-material/Share';
 import DownloadIcon from '@mui/icons-material/Download';
 import CropFreeIcon from '@mui/icons-material/CropFree';
 
+import { useSnackbar } from '@hooks/useSnackbar';
+import { useFileDownload } from '@hooks/useFileDownload';
+
 const StyledCard = styled(Card)(() => ({
   position: 'relative',
   borderRadius: 16,
@@ -44,11 +47,29 @@ const FloatingButton = styled(IconButton)(() => ({
 
 type HoverActionCardProps = {
   src: string;
+  onDownload: () => Promise<Blob>;
 };
 
 export default function HoverActionCard({
   src,
+  onDownload,
 }: Readonly<HoverActionCardProps>) {
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
+  const { handleDownload, loading } = useFileDownload({
+    onDownload,
+    onSuccess: () => {},
+    onError: () => {
+      showSnackbar({
+        message: 'Download failed. Please try again later.',
+        severity: 'error',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+    },
+  });
+
   return (
     <StyledCard>
       <CardMedia component="img" image={src} alt="avatar" />
@@ -64,7 +85,11 @@ export default function HoverActionCard({
             <FloatingButton size="small">
               <ShareIcon />
             </FloatingButton>
-            <FloatingButton size="small">
+            <FloatingButton
+              size="small"
+              onClick={handleDownload}
+              loading={loading}
+            >
               <DownloadIcon />
             </FloatingButton>
           </Box>
@@ -77,6 +102,7 @@ export default function HoverActionCard({
           </FloatingButton>
         </Box>
       </Overlay>
+      {SnackbarComponent}
     </StyledCard>
   );
 }
