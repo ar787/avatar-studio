@@ -12,16 +12,18 @@ import {
 } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+
 import { useAuth } from '@hooks/useAuth';
 import { useSnackbar } from '@hooks/useSnackbar';
 
+import CardDisplay from './CardDisplay';
 import Button from '@ui/components/Button';
 import Link from '@ui/components/Link';
 
 export default function HeaderBar() {
   const navigate = useNavigate();
   const { showSnackbar, SnackbarComponent } = useSnackbar();
-  const { isAuthenticated, logOut } = useAuth();
+  const { isAuthenticated, currentUserProfile, logOut } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -68,6 +70,9 @@ export default function HeaderBar() {
               gap: '10px',
             }}
           >
+            {isAuthenticated && (
+              <CardDisplay credits={currentUserProfile?.credits ?? 0} />
+            )}
             <Button
               variant="outlined"
               endIcon={<PhotoLibraryIcon />}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Box, InputAdornment, Tooltip, Typography } from '@mui/material';
 import type { SxProps } from '@mui/material/styles';
@@ -24,7 +24,7 @@ const inputContainerSx: SxProps = {
 
 export default function AvatarGenerator() {
   const [value, setValue] = useState('');
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, currentUserProfile } = useAuth();
   const navigate = useNavigate();
 
   function onGenerate() {
@@ -35,6 +35,14 @@ export default function AvatarGenerator() {
       },
     });
   }
+
+  const getTooltipTitle = useCallback(() => {
+    if (!isAuthenticated) return 'Sign in to generate';
+    if (currentUserProfile && currentUserProfile.credits <= 0) {
+      return 'Insufficient credits';
+    }
+    return '';
+  }, [currentUserProfile, isAuthenticated]);
 
   return (
     <Box sx={containerSx}>
@@ -53,10 +61,7 @@ export default function AvatarGenerator() {
           slotProps={{
             input: {
               endAdornment: (
-                <Tooltip
-                  title={!isAuthenticated ? 'Sign in to generate' : ''}
-                  arrow
-                >
+                <Tooltip title={getTooltipTitle()} arrow>
                   <InputAdornment position="start">
                     <Button
                       disabled={value.trim().length === 0}

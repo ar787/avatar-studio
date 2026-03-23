@@ -9,24 +9,47 @@ import {
 import { auth } from '../services/firebase';
 import { AuthContext } from '../contexts/AuthContext';
 import type { AuthState } from '../types/auth';
+import type { UserProfile } from '../types/userProfile';
 import {
   signOutUser,
   signInUser,
   signUpUser,
   createUserDocument,
+  getUserProfile,
 } from '../services/api';
 
 export const AuthProvider = ({ children }: { children: ReactElement }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUserProfile, setCurrentUserProfile] =
+    useState<UserProfile | null>(null);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
+  const refreshProfile = useCallback(async () => {
+    const userProfile = (await getUserProfile()).data;
+    setCurrentUserProfile(userProfile);
+  }, []);
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
       setIsInitialLoading(false);
+
+      if (user) {
+        refreshProfile();
+      } else {
+        setCurrentUserProfile(null);
+      }
     });
 
     return unsubscribe;
+  }, [refreshProfile]);
+
+  const setProfileData = useCallback((newData: Partial<UserProfile>) => {
+    setCurrentUserProfile((prev) => {
+      if (!prev) return null;
+
+      return { ...prev, ...newData };
+    });
   }, []);
 
   const logOut = useCallback(async () => {
@@ -48,13 +71,25 @@ export const AuthProvider = ({ children }: { children: ReactElement }) => {
   const value: AuthState = useMemo(() => {
     return {
       currentUser,
+      currentUserProfile,
       isAuthenticated: currentUser !== null,
       isInitialLoading,
+      refreshProfile,
+      setProfileData,
       logOut,
       signIn,
       signUp,
     };
-  }, [currentUser, isInitialLoading, logOut, signIn, signUp]);
+  }, [
+    currentUser,
+    currentUserProfile,
+    isInitialLoading,
+    refreshProfile,
+    setProfileData,
+    logOut,
+    signIn,
+    signUp,
+  ]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

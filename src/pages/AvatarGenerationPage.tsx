@@ -20,6 +20,8 @@ import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 
 import type { GeneratedAvatarType } from '../types/avatar';
+import { useAuth } from '@hooks/useAuth';
+import { useSnackbar } from '@hooks/useSnackbar';
 
 const containerSx: SxProps = {
   display: 'flex',
@@ -35,7 +37,8 @@ export default function AvatarGenerationPage() {
   const initialData = useLoaderData({ from: '/_layout/avatar-generation' });
   const { state } = useLocation();
   const navigate = useNavigate();
-
+  const { setProfileData } = useAuth();
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
   const [value, setValue] = useState('');
   const [isAvatarGenerated, setIsAvatarGenerated] = useState(false);
   const [list, setList] = useState(initialData);
@@ -48,9 +51,16 @@ export default function AvatarGenerationPage() {
       setIsAvatarGenerated(true);
       generationStarted.current = true;
       try {
-        await generateAvatar(prompt);
+        const data = await generateAvatar(prompt);
         const res = await getGeneratedAvatars();
+        setProfileData({ credits: data?.remainingCredits ?? 0 });
         setList(res);
+      } catch {
+        showSnackbar({
+          message: 'Insufficient credits.',
+          anchorOrigin: { horizontal: 'right', vertical: 'top' },
+          severity: 'error',
+        });
       } finally {
         generationStarted.current = false;
         setIsAvatarGenerated(false);
@@ -62,7 +72,7 @@ export default function AvatarGenerationPage() {
         });
       }
     },
-    [navigate],
+    [navigate, setProfileData, showSnackbar],
   );
 
   useEffect(() => {
@@ -97,6 +107,7 @@ export default function AvatarGenerationPage() {
         }}
       />
       <AvatarCardList list={list} loading={isAvatarGenerated} />
+      {SnackbarComponent}
     </Box>
   );
 }

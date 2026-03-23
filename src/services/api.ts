@@ -52,6 +52,11 @@ export const generateAvatar = async (prompt: string) => {
     body: JSON.stringify({ prompt }),
   });
 
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message);
+  }
+
   return await response.json();
 };
 
@@ -103,5 +108,18 @@ export const downloadAvatarFromLibrary = async (fileName: string) => {
   }
 
   const result = await response.blob();
+  return result;
+};
+
+export const getUserProfile = async () => {
+  const token = await tokenManager.getToken();
+  const response = await fetch('api/user/getUserProfile', {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const result = await response.json();
   return result;
 };
