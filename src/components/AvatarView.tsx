@@ -1,10 +1,15 @@
+import { useEffect, useRef, useState } from 'react';
+
 import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import Zoom from '@mui/material/Zoom';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grow from '@mui/material/Grow';
 import Avatar, { type AvatarProps } from '@mui/material/Avatar';
-import { Fade, Box, CircularProgress, Grow, Zoom } from '@mui/material';
 import type { SxProps } from '@mui/material/styles';
-import { getAvatarDownloadBlob } from '../services/api';
 import { logEvent } from 'firebase/analytics';
 
+import { getAvatarDownloadBlob } from '../services/api';
 import { analytics } from '../services/firebase';
 import { useSnackbar } from '@hooks/useSnackbar';
 import Button from '@ui/components/Button';
@@ -26,7 +31,7 @@ const sx: SxProps = {
   userSelect: 'none',
   WebkitUserSelect: 'none',
 };
-const TIMEOUT = 300;
+const TIMEOUT = 200;
 
 export default function AvatarView({
   open,
@@ -53,71 +58,92 @@ export default function AvatarView({
       });
     },
   });
+  const [internalOpen, setInternalOpen] = useState(false);
+  const timeOutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function handleOnClose() {
-    onClose();
-  }
+  const clearTimer = () => {
+    if (timeOutRef.current) {
+      clearTimeout(timeOutRef.current);
+      timeOutRef.current = null;
+    }
+  };
+
+  const handleClose = () => {
+    setInternalOpen(false);
+    timeOutRef.current = setTimeout(() => {
+      onClose();
+    }, TIMEOUT);
+  };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setInternalOpen(open);
+
+    return clearTimer;
+  }, [open]);
 
   const onContextMenu: AvatarProps['onContextMenu'] = (e) => e.preventDefault();
 
   return (
     <>
-      <Fade in={open} timeout={{ enter: 0, exit: TIMEOUT }}>
-        <Backdrop open={open} onClick={handleOnClose}>
+      <Backdrop
+        open={internalOpen}
+        transitionDuration={{ enter: 0, exit: TIMEOUT }}
+        onClick={handleClose}
+      >
+        <Box
+          onClick={(e) => e.stopPropagation()}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            paddingX: {
+              xs: '10px',
+              sm: 0,
+            },
+            gap: 2,
+          }}
+        >
+          <Zoom in={internalOpen} timeout={{ enter: 200, exit: TIMEOUT }}>
+            <Avatar
+              src={imageUrl}
+              draggable={false}
+              sx={sx}
+              slotProps={{ img: { draggable: false } }}
+              onContextMenu={onContextMenu}
+            />
+          </Zoom>
+
           <Box
-            onClick={(e) => e.stopPropagation()}
             sx={{
+              position: 'relative',
+              width: '100%',
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              paddingX: {
-                xs: '10px',
-                sm: 0,
-              },
-              gap: 2,
+              justifyContent: 'center',
             }}
           >
-            <Zoom in={open} timeout={{ enter: 200, exit: 0 }}>
-              <Avatar
-                src={imageUrl}
-                draggable={false}
-                sx={sx}
-                slotProps={{ img: { draggable: false } }}
-                onContextMenu={onContextMenu}
+            {loading && (
+              <CircularProgress
+                color="secondary"
+                size={36}
+                sx={{
+                  position: 'absolute',
+                }}
               />
-            </Zoom>
-
-            <Box
-              sx={{
-                position: 'relative',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              {loading && (
-                <CircularProgress
-                  color="secondary"
-                  size={36}
-                  sx={{
-                    position: 'absolute',
-                  }}
-                />
-              )}
-              <Grow in={!loading} timeout={300}>
-                <Button
-                  onClick={handleDownload}
-                  fullWidth
-                  aria-label="Download avatar"
-                  size="large"
-                >
-                  Download
-                </Button>
-              </Grow>
-            </Box>
+            )}
+            <Grow in={!loading} timeout={300}>
+              <Button
+                onClick={handleDownload}
+                fullWidth
+                aria-label="Download avatar"
+                size="large"
+              >
+                Download
+              </Button>
+            </Grow>
           </Box>
-        </Backdrop>
-      </Fade>
+        </Box>
+      </Backdrop>
       {SnackbarComponent}
     </>
   );
