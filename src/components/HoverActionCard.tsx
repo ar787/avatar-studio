@@ -1,8 +1,5 @@
 import { Card, CardMedia, Box, IconButton, styled } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
-import ShareIcon from '@mui/icons-material/Share';
 import DownloadIcon from '@mui/icons-material/Download';
-import CropFreeIcon from '@mui/icons-material/CropFree';
 
 import { useSnackbar } from '@hooks/useSnackbar';
 import { useFileDownload } from '@hooks/useFileDownload';
@@ -34,7 +31,7 @@ const Overlay = styled(Box)(() => ({
 
 const ActionGroup = styled(Box)({
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-end',
 });
 
 const FloatingButton = styled(IconButton)(() => ({
@@ -77,14 +74,14 @@ export default function HoverActionCard({
       <Overlay>
         {/* Top Row */}
         <ActionGroup>
-          <FloatingButton size="small">
+          {/* <FloatingButton size="small">
             <CheckIcon />
-          </FloatingButton>
+          </FloatingButton> */}
 
           <Box sx={{ display: 'flex', gap: 1 }}>
-            <FloatingButton size="small">
+            {/* <FloatingButton size="small">
               <ShareIcon />
-            </FloatingButton>
+            </FloatingButton> */}
             <FloatingButton
               size="small"
               onClick={handleDownload}
@@ -96,11 +93,11 @@ export default function HoverActionCard({
         </ActionGroup>
 
         {/* Bottom Row */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <FloatingButton size="small">
             <CropFreeIcon />
           </FloatingButton>
-        </Box>
+        </Box> */}
       </Overlay>
       {SnackbarComponent}
     </StyledCard>
