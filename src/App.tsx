@@ -1,18 +1,37 @@
-import { Suspense } from 'react';
-import './App.css';
-import { Container } from '@mui/material';
+import { useEffect, useMemo } from 'react';
+import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { routeTree } from './routeTree.gen';
 
-import HomePage from './pages/HomePage';
-import LoadingPage from './pages/LoadingPage';
+import { useAuth } from '@hooks/useAuth';
+import './index.css';
 
-function App() {
-  return (
-    <Container fixed maxWidth={false}>
-      <Suspense fallback={<LoadingPage />}>
-        <HomePage />
-      </Suspense>
-    </Container>
-  );
+// Set up a Router instance
+const router = createRouter({
+  routeTree,
+  defaultPreload: 'intent',
+  scrollRestoration: true,
+  context: {
+    auth: undefined!,
+  },
+});
+
+// Register things for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+  interface HistoryState {
+    prompt?: string;
+  }
 }
 
-export default App;
+export default function App() {
+  const auth = useAuth();
+  const context = useMemo(() => ({ auth }), [auth]);
+
+  useEffect(() => {
+    router.invalidate();
+  }, [auth.currentUser, auth.isInitialLoading]);
+
+  return <RouterProvider router={router} context={context} />;
+}

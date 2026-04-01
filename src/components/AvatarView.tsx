@@ -1,12 +1,19 @@
+import { useEffect, useRef, useState } from 'react';
+
 import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import Zoom from '@mui/material/Zoom';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grow from '@mui/material/Grow';
 import Avatar, { type AvatarProps } from '@mui/material/Avatar';
-import { useState } from 'react';
-import { Button, Fade, Box, CircularProgress, Grow, Zoom } from '@mui/material';
 import type { SxProps } from '@mui/material/styles';
-import { getAvatarDownloadBlob } from '../services/api';
 import { logEvent } from 'firebase/analytics';
+
+import { getAvatarDownloadBlob } from '../services/api';
 import { analytics } from '../services/firebase';
-import { useSnackbar } from '../hooks/useSnackbar';
+import { useSnackbar } from '@hooks/useSnackbar';
+import Button from '@ui/components/Button';
+import { useFileDownload } from '@hooks/useFileDownload';
 
 type AvatarViewProps = {
   imageUrl: string;
@@ -24,13 +31,7 @@ const sx: SxProps = {
   userSelect: 'none',
   WebkitUserSelect: 'none',
 };
-const TIMEOUT = 300;
-
-function generateUniqueFileName(): string {
-  const timestamp = Date.now().toString();
-  const lastFourDigits = timestamp.slice(-4);
-  return `avatar-${lastFourDigits}.png`;
-}
+const TIMEOUT = 200;
 
 export default function AvatarView({
   open,
@@ -38,31 +39,15 @@ export default function AvatarView({
   imageUrl,
   name,
 }: Readonly<AvatarViewProps>) {
-  const [isLoading, setIsLoading] = useState(false);
   const { showSnackbar, SnackbarComponent } = useSnackbar();
-
-  function handleOnClose() {
-    onClose();
-  }
-
-  async function download(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    try {
-      e.stopPropagation();
-      setIsLoading(true);
+  const { handleDownload, loading } = useFileDownload({
+    onDownload: () => getAvatarDownloadBlob(name),
+    onSuccess: () => {
       logEvent(analytics, 'download_image', {
         image_name: name,
       });
-
-      const blob = await getAvatarDownloadBlob(name);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = generateUniqueFileName();
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } catch {
+    },
+    onError: () => {
       showSnackbar({
         message: 'Download failed. Please try again later.',
         severity: 'error',
@@ -71,95 +56,94 @@ export default function AvatarView({
           horizontal: 'right',
         },
       });
-    } finally {
-      setIsLoading(false);
+    },
+  });
+  const [internalOpen, setInternalOpen] = useState(false);
+  const timeOutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearTimer = () => {
+    if (timeOutRef.current) {
+      clearTimeout(timeOutRef.current);
+      timeOutRef.current = null;
     }
-  }
+  };
+
+  const handleClose = () => {
+    setInternalOpen(false);
+    timeOutRef.current = setTimeout(() => {
+      onClose();
+    }, TIMEOUT);
+  };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setInternalOpen(open);
+
+    return clearTimer;
+  }, [open]);
 
   const onContextMenu: AvatarProps['onContextMenu'] = (e) => e.preventDefault();
 
   return (
     <>
-      <Fade in={open} timeout={{ enter: 0, exit: TIMEOUT }}>
-        <Backdrop open={open} onClick={handleOnClose}>
+      <Backdrop
+        open={internalOpen}
+        transitionDuration={{ enter: 0, exit: TIMEOUT }}
+        onClick={handleClose}
+      >
+        <Box
+          onClick={(e) => e.stopPropagation()}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            paddingX: {
+              xs: '10px',
+              sm: 0,
+            },
+            gap: 2,
+          }}
+        >
+          <Zoom in={internalOpen} timeout={{ enter: 200, exit: TIMEOUT }}>
+            <Avatar
+              src={imageUrl}
+              draggable={false}
+              sx={sx}
+              slotProps={{ img: { draggable: false } }}
+              onContextMenu={onContextMenu}
+            />
+          </Zoom>
+
           <Box
-            onClick={(e) => e.stopPropagation()}
             sx={{
+              position: 'relative',
+              width: '100%',
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              paddingX: {
-                xs: '10px',
-                sm: 0,
-              },
-              gap: 2,
+              justifyContent: 'center',
             }}
           >
-            <Zoom in={open} timeout={{ enter: 200, exit: 0 }}>
-              <Avatar
-                src={imageUrl}
-                draggable={false}
-                sx={sx}
-                slotProps={{ img: { draggable: false } }}
-                onContextMenu={onContextMenu}
+            {loading && (
+              <CircularProgress
+                color="secondary"
+                size={36}
+                sx={{
+                  position: 'absolute',
+                }}
               />
-            </Zoom>
-
-            <Box
-              sx={{
-                position: 'relative',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              {isLoading && (
-                <CircularProgress
-                  color="secondary"
-                  size={36}
-                  sx={{
-                    position: 'absolute',
-                  }}
-                />
-              )}
-              <Grow in={!isLoading} timeout={300}>
-                <Button
-                  variant="contained"
-                  onClick={download}
-                  fullWidth
-                  sx={{
-                    background:
-                      'linear-gradient(135deg, #6A1B9A 0%, #FF4081 50%, #7C4DFF 100%)',
-                    color: '#FFFFFF',
-                    textTransform: 'uppercase',
-                    letterSpacing: 2,
-                    fontWeight: 700,
-                    borderRadius: '999px',
-                    px: 4,
-                    py: 1.5,
-                    boxShadow: '0 0 18px rgba(255, 64, 129, 0.7)',
-                    border: '1px solid rgba(255, 255, 255, 0.25)',
-                    transition: 'all 0.2s ease-out',
-                    '&:hover': {
-                      background:
-                        'linear-gradient(135deg, #4A148C 0%, #F50057 50%, #651FFF 100%)',
-                      boxShadow: '0 0 26px rgba(255, 64, 129, 1)',
-                      transform: 'translateY(-2px) scale(1.03)',
-                    },
-                    '&:active': {
-                      transform: 'translateY(0) scale(0.98)',
-                      boxShadow: '0 0 12px rgba(255, 64, 129, 0.6)',
-                    },
-                  }}
-                  aria-label="Download avatar"
-                >
-                  Download
-                </Button>
-              </Grow>
-            </Box>
+            )}
+            <Grow in={!loading} timeout={300}>
+              <Button
+                onClick={handleDownload}
+                fullWidth
+                aria-label="Download avatar"
+                size="large"
+              >
+                Download
+              </Button>
+            </Grow>
           </Box>
-        </Backdrop>
-      </Fade>
+        </Box>
+      </Backdrop>
       {SnackbarComponent}
     </>
   );
