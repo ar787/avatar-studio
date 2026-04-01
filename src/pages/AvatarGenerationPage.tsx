@@ -51,16 +51,24 @@ export default function AvatarGenerationPage() {
       setIsAvatarGenerated(true);
       generationStarted.current = true;
       try {
-        const data = await generateAvatar(prompt);
+        const { data } = await generateAvatar(prompt);
         const res = await getGeneratedAvatars();
         setProfileData({ credits: data?.remainingCredits ?? 0 });
         setList(res);
-      } catch {
-        showSnackbar({
-          message: 'Insufficient credits.',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' },
-          severity: 'error',
-        });
+      } catch (error) {
+        if (error instanceof Error) {
+          let message = 'Something went wrong. Please try again later.';
+
+          if (error.message === 'Insufficient credits.') {
+            message = 'You have insufficient credits.';
+          }
+
+          showSnackbar({
+            message,
+            anchorOrigin: { horizontal: 'right', vertical: 'top' },
+            severity: 'error',
+          });
+        }
       } finally {
         generationStarted.current = false;
         setIsAvatarGenerated(false);
