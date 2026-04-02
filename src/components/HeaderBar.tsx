@@ -19,11 +19,13 @@ import { useSnackbar } from '@hooks/useSnackbar';
 import CardDisplay from './CardDisplay';
 import Button from '@ui/components/Button';
 import Link from '@ui/components/Link';
+import router from '../router';
 
 export default function HeaderBar() {
   const navigate = useNavigate();
   const { showSnackbar, SnackbarComponent } = useSnackbar();
-  const { isAuthenticated, currentUserProfile, logOut } = useAuth();
+  const { isAuthenticated, currentUserProfile, currentUser, logOut } =
+    useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -35,8 +37,9 @@ export default function HeaderBar() {
     setIsLoggingOut(true);
     try {
       await logOut();
+      navigate({ to: '/sign-in', replace: true });
+      router.update({ context: { auth: undefined! } });
       handleCloseMenu();
-      navigate({ to: '/sign-in' });
     } catch {
       showSnackbar({
         message: 'Something went wrong. Please try again later.',
@@ -77,7 +80,12 @@ export default function HeaderBar() {
               variant="outlined"
               endIcon={<PhotoLibraryIcon />}
               onClick={() => {
-                navigate({ to: '/avatar-generation' });
+                navigate({
+                  to: '/avatar-generation',
+                  search: {
+                    userId: currentUser?.uid,
+                  },
+                });
               }}
             >
               Library

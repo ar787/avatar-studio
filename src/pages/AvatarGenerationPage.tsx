@@ -37,12 +37,11 @@ export default function AvatarGenerationPage() {
   const initialData = useLoaderData({ from: '/_layout/avatar-generation' });
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { setProfileData } = useAuth();
+  const { setProfileData, currentUser } = useAuth();
   const { showSnackbar, SnackbarComponent } = useSnackbar();
   const [value, setValue] = useState('');
   const [isAvatarGenerated, setIsAvatarGenerated] = useState(false);
   const [list, setList] = useState(initialData);
-
   const generationStarted = useRef(false);
 
   const handleGenerate = useCallback(
@@ -76,11 +75,12 @@ export default function AvatarGenerationPage() {
         navigate({
           to: '/avatar-generation',
           state: (prev) => ({ ...prev, prompt: undefined }),
+          search: { userId: currentUser?.uid },
           replace: true,
         });
       }
     },
-    [navigate, setProfileData, showSnackbar],
+    [currentUser?.uid, navigate, setProfileData, showSnackbar],
   );
 
   useEffect(() => {
