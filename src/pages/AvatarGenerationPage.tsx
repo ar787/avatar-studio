@@ -126,15 +126,19 @@ type AvatarCardListProps = {
 };
 
 function AvatarCardList({ list, loading }: AvatarCardListProps) {
+  const skeletonSize = list.length > 0 ? '100%' : { xs: '200px', md: '300px' };
+
   return (
-    <Grid container spacing={2} sx={{ mt: 4 }}>
+    <Grid container spacing={2} sx={{ mt: 4, width: '100%' }}>
       {loading && (
         <Grid size={sizes}>
           <Skeleton
+            component="div"
             sx={{
               bgcolor: 'grey.900',
               borderRadius: '16px',
-              height: { xs: '226px', sm: '100%' },
+              height: skeletonSize,
+              width: skeletonSize,
             }}
             variant="rectangular"
           />
