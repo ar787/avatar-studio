@@ -7,6 +7,7 @@ const router = createRouter({
   scrollRestoration: true,
   context: {
     auth: undefined!,
+    notification: undefined!,
   },
 });
 

@@ -24,6 +24,12 @@ export const getGeneratedAvatars = async () => {
     },
   });
 
+  if (!response.ok) {
+    throw new Error(
+      'Failed to fetch generated avatars. Please try again later.',
+    );
+  }
+
   const result = await response.json();
 
   return result.data as GeneratedAvatarType[];

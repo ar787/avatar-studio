@@ -26,5 +26,17 @@ export const Route = createFileRoute('/_layout/avatar-generation')({
     };
   },
   loaderDeps: ({ search }) => ({ userId: search.userId }),
-  loader: () => getGeneratedAvatars(),
+  loader: async ({ context }) => {
+    try {
+      return await getGeneratedAvatars();
+    } catch (error) {
+      if (error instanceof Error) {
+        context.notification.addNotification({
+          message: error.message,
+          severity: 'error',
+        });
+      }
+      return [];
+    }
+  },
 });

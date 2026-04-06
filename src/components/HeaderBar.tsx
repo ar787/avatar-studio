@@ -37,7 +37,9 @@ export default function HeaderBar() {
     try {
       await logOut();
       navigate({ to: '/sign-in', replace: true });
-      router.update({ context: { auth: undefined! } });
+      router.update({
+        context: { auth: undefined!, notification: undefined! },
+      });
       handleCloseMenu();
     } catch {
       addNotification({
