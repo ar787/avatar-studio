@@ -11,9 +11,9 @@ import { logEvent } from 'firebase/analytics';
 
 import { getAvatarDownloadBlob } from '../services/api';
 import { analytics } from '../services/firebase';
-import { useSnackbar } from '@hooks/useSnackbar';
 import Button from '@ui/components/Button';
 import { useFileDownload } from '@hooks/useFileDownload';
+import { useNotification } from '@hooks/useNotification';
 
 type AvatarViewProps = {
   imageUrl: string;
@@ -39,7 +39,7 @@ export default function AvatarView({
   imageUrl,
   name,
 }: Readonly<AvatarViewProps>) {
-  const { showSnackbar, SnackbarComponent } = useSnackbar();
+  const { addNotification } = useNotification();
   const { handleDownload, loading } = useFileDownload({
     onDownload: () => getAvatarDownloadBlob(name),
     onSuccess: () => {
@@ -48,13 +48,9 @@ export default function AvatarView({
       });
     },
     onError: () => {
-      showSnackbar({
+      addNotification({
         message: 'Download failed. Please try again later.',
         severity: 'error',
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'right',
-        },
       });
     },
   });
@@ -85,66 +81,63 @@ export default function AvatarView({
   const onContextMenu: AvatarProps['onContextMenu'] = (e) => e.preventDefault();
 
   return (
-    <>
-      <Backdrop
-        open={internalOpen}
-        transitionDuration={{ enter: 0, exit: TIMEOUT }}
-        onClick={handleClose}
+    <Backdrop
+      open={internalOpen}
+      transitionDuration={{ enter: 0, exit: TIMEOUT }}
+      onClick={handleClose}
+    >
+      <Box
+        onClick={(e) => e.stopPropagation()}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          paddingX: {
+            xs: '10px',
+            sm: 0,
+          },
+          gap: 2,
+        }}
       >
+        <Zoom in={internalOpen} timeout={{ enter: 200, exit: TIMEOUT }}>
+          <Avatar
+            src={imageUrl}
+            draggable={false}
+            sx={sx}
+            slotProps={{ img: { draggable: false } }}
+            onContextMenu={onContextMenu}
+          />
+        </Zoom>
+
         <Box
-          onClick={(e) => e.stopPropagation()}
           sx={{
+            position: 'relative',
+            width: '100%',
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            paddingX: {
-              xs: '10px',
-              sm: 0,
-            },
-            gap: 2,
+            justifyContent: 'center',
           }}
         >
-          <Zoom in={internalOpen} timeout={{ enter: 200, exit: TIMEOUT }}>
-            <Avatar
-              src={imageUrl}
-              draggable={false}
-              sx={sx}
-              slotProps={{ img: { draggable: false } }}
-              onContextMenu={onContextMenu}
+          {loading && (
+            <CircularProgress
+              color="secondary"
+              size={36}
+              sx={{
+                position: 'absolute',
+              }}
             />
-          </Zoom>
-
-          <Box
-            sx={{
-              position: 'relative',
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            {loading && (
-              <CircularProgress
-                color="secondary"
-                size={36}
-                sx={{
-                  position: 'absolute',
-                }}
-              />
-            )}
-            <Grow in={!loading} timeout={300}>
-              <Button
-                onClick={handleDownload}
-                fullWidth
-                aria-label="Download avatar"
-                size="large"
-              >
-                Download
-              </Button>
-            </Grow>
-          </Box>
+          )}
+          <Grow in={!loading} timeout={300}>
+            <Button
+              onClick={handleDownload}
+              fullWidth
+              aria-label="Download avatar"
+              size="large"
+            >
+              Download
+            </Button>
+          </Grow>
         </Box>
-      </Backdrop>
-      {SnackbarComponent}
-    </>
+      </Box>
+    </Backdrop>
   );
 }

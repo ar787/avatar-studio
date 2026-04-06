@@ -12,7 +12,7 @@ import TextField from '@ui/components/TextField';
 import Link from '@ui/components/Link';
 
 import { useAuthForm } from '@hooks/useAuthForm';
-import { useSnackbar } from '@hooks/useSnackbar';
+import { useNotification } from '@hooks/useNotification';
 import { useAuth } from '@hooks/useAuth';
 
 import AuthLayout from '../layout/AuthLayout';
@@ -20,7 +20,7 @@ import AuthLayout from '../layout/AuthLayout';
 export default function SignInPage() {
   const [toggle, setToggle] = useState(false);
   const navigate = useNavigate();
-  const { showSnackbar, SnackbarComponent } = useSnackbar();
+  const { addNotification } = useNotification();
   const { signIn } = useAuth();
   const { values, errors, loading, submit, setField } = useAuthForm({
     inputValues: {
@@ -38,9 +38,8 @@ export default function SignInPage() {
       navigate({ to: '/' });
     },
     onUnexpectedError: () =>
-      showSnackbar({
+      addNotification({
         severity: 'error',
-        anchorOrigin: { horizontal: 'right', vertical: 'top' },
         message: 'Something went wrong. Please try again later.',
       }),
   });
@@ -92,8 +91,6 @@ export default function SignInPage() {
           }}
         />
       </Stack>
-
-      {SnackbarComponent}
     </AuthLayout>
   );
 }

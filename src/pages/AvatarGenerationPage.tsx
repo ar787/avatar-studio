@@ -21,7 +21,7 @@ import TextField from '@ui/components/TextField';
 
 import type { GeneratedAvatarType } from '../types/avatar';
 import { useAuth } from '@hooks/useAuth';
-import { useSnackbar } from '@hooks/useSnackbar';
+import { useNotification } from '@hooks/useNotification';
 
 const containerSx: SxProps = {
   display: 'flex',
@@ -38,7 +38,7 @@ export default function AvatarGenerationPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { setProfileData, currentUser } = useAuth();
-  const { showSnackbar, SnackbarComponent } = useSnackbar();
+  const { addNotification } = useNotification();
   const [value, setValue] = useState('');
   const [isAvatarGenerated, setIsAvatarGenerated] = useState(false);
   const [list, setList] = useState(initialData);
@@ -62,9 +62,8 @@ export default function AvatarGenerationPage() {
             message = 'You have insufficient credits.';
           }
 
-          showSnackbar({
+          addNotification({
             message,
-            anchorOrigin: { horizontal: 'right', vertical: 'top' },
             severity: 'error',
           });
         }
@@ -80,7 +79,7 @@ export default function AvatarGenerationPage() {
         });
       }
     },
-    [currentUser?.uid, navigate, setProfileData, showSnackbar],
+    [currentUser?.uid, navigate, setProfileData, addNotification],
   );
 
   useEffect(() => {
@@ -115,7 +114,6 @@ export default function AvatarGenerationPage() {
         }}
       />
       <AvatarCardList list={list} loading={isAvatarGenerated} />
-      {SnackbarComponent}
     </Box>
   );
 }
