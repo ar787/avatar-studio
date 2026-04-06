@@ -21,7 +21,7 @@ import TextField from '@ui/components/TextField';
 
 import type { GeneratedAvatarType } from '../types/avatar';
 import { useAuth } from '@hooks/useAuth';
-import { useSnackbar } from '@hooks/useSnackbar';
+import { useNotification } from '@hooks/useNotification';
 
 const containerSx: SxProps = {
   display: 'flex',
@@ -37,12 +37,11 @@ export default function AvatarGenerationPage() {
   const initialData = useLoaderData({ from: '/_layout/avatar-generation' });
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { setProfileData } = useAuth();
-  const { showSnackbar, SnackbarComponent } = useSnackbar();
+  const { setProfileData, currentUser } = useAuth();
+  const { addNotification } = useNotification();
   const [value, setValue] = useState('');
   const [isAvatarGenerated, setIsAvatarGenerated] = useState(false);
   const [list, setList] = useState(initialData);
-
   const generationStarted = useRef(false);
 
   const handleGenerate = useCallback(
@@ -51,16 +50,23 @@ export default function AvatarGenerationPage() {
       setIsAvatarGenerated(true);
       generationStarted.current = true;
       try {
-        const data = await generateAvatar(prompt);
+        const { data } = await generateAvatar(prompt);
         const res = await getGeneratedAvatars();
         setProfileData({ credits: data?.remainingCredits ?? 0 });
         setList(res);
-      } catch {
-        showSnackbar({
-          message: 'Insufficient credits.',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' },
-          severity: 'error',
-        });
+      } catch (error) {
+        if (error instanceof Error) {
+          let message = 'Something went wrong. Please try again later.';
+
+          if (error.message === 'Insufficient credits.') {
+            message = 'You have insufficient credits.';
+          }
+
+          addNotification({
+            message,
+            severity: 'error',
+          });
+        }
       } finally {
         generationStarted.current = false;
         setIsAvatarGenerated(false);
@@ -68,11 +74,12 @@ export default function AvatarGenerationPage() {
         navigate({
           to: '/avatar-generation',
           state: (prev) => ({ ...prev, prompt: undefined }),
+          search: { userId: currentUser?.uid },
           replace: true,
         });
       }
     },
-    [navigate, setProfileData, showSnackbar],
+    [currentUser?.uid, navigate, setProfileData, addNotification],
   );
 
   useEffect(() => {
@@ -107,7 +114,6 @@ export default function AvatarGenerationPage() {
         }}
       />
       <AvatarCardList list={list} loading={isAvatarGenerated} />
-      {SnackbarComponent}
     </Box>
   );
 }
@@ -118,15 +124,19 @@ type AvatarCardListProps = {
 };
 
 function AvatarCardList({ list, loading }: AvatarCardListProps) {
+  const skeletonSize = list.length > 0 ? '100%' : { xs: '200px', md: '300px' };
+
   return (
-    <Grid container spacing={2} sx={{ mt: 4 }}>
+    <Grid container spacing={2} sx={{ mt: 4, width: '100%' }}>
       {loading && (
         <Grid size={sizes}>
           <Skeleton
+            component="div"
             sx={{
               bgcolor: 'grey.900',
               borderRadius: '16px',
-              height: { xs: '226px', sm: '100%' },
+              height: skeletonSize,
+              width: skeletonSize,
             }}
             variant="rectangular"
           />

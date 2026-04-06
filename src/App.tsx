@@ -1,33 +1,15 @@
 import { useEffect, useMemo } from 'react';
-import { RouterProvider, createRouter } from '@tanstack/react-router';
-import { routeTree } from './routeTree.gen';
+import { RouterProvider } from '@tanstack/react-router';
 
-import { useAuth } from '@hooks/useAuth';
+import { useAuth, useNotification } from '@hooks';
+import router from './router';
+
 import './index.css';
-
-// Set up a Router instance
-const router = createRouter({
-  routeTree,
-  defaultPreload: 'intent',
-  scrollRestoration: true,
-  context: {
-    auth: undefined!,
-  },
-});
-
-// Register things for type safety
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-  interface HistoryState {
-    prompt?: string;
-  }
-}
-
 export default function App() {
   const auth = useAuth();
-  const context = useMemo(() => ({ auth }), [auth]);
+  const notification = useNotification();
+
+  const context = useMemo(() => ({ auth, notification }), [auth, notification]);
 
   useEffect(() => {
     router.invalidate();

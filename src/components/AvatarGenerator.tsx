@@ -24,12 +24,13 @@ const inputContainerSx: SxProps = {
 
 export default function AvatarGenerator() {
   const [value, setValue] = useState('');
-  const { isAuthenticated, currentUserProfile } = useAuth();
+  const { isAuthenticated, currentUser, currentUserProfile } = useAuth();
   const navigate = useNavigate();
 
   function onGenerate() {
     navigate({
       to: '/avatar-generation',
+      search: { userId: currentUser?.uid },
       state: {
         prompt: value,
       },

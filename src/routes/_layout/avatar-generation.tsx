@@ -20,5 +20,23 @@ export const Route = createFileRoute('/_layout/avatar-generation')({
       });
     }
   },
-  loader: () => getGeneratedAvatars(),
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      userId: typeof search.userId === 'string' ? search.userId : undefined,
+    };
+  },
+  loaderDeps: ({ search }) => ({ userId: search.userId }),
+  loader: async ({ context }) => {
+    try {
+      return await getGeneratedAvatars();
+    } catch (error) {
+      if (error instanceof Error) {
+        context.notification.addNotification({
+          message: error.message,
+          severity: 'error',
+        });
+      }
+      return [];
+    }
+  },
 });

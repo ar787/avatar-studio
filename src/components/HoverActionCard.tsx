@@ -1,8 +1,8 @@
 import { Card, CardMedia, Box, IconButton, styled } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 
-import { useSnackbar } from '@hooks/useSnackbar';
 import { useFileDownload } from '@hooks/useFileDownload';
+import { useNotification } from '@hooks/useNotification';
 
 const StyledCard = styled(Card)(() => ({
   position: 'relative',
@@ -51,18 +51,14 @@ export default function HoverActionCard({
   src,
   onDownload,
 }: Readonly<HoverActionCardProps>) {
-  const { showSnackbar, SnackbarComponent } = useSnackbar();
+  const { addNotification } = useNotification();
   const { handleDownload, loading } = useFileDownload({
     onDownload,
     onSuccess: () => {},
     onError: () => {
-      showSnackbar({
+      addNotification({
         message: 'Download failed. Please try again later.',
         severity: 'error',
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'right',
-        },
       });
     },
   });
@@ -99,7 +95,6 @@ export default function HoverActionCard({
           </FloatingButton>
         </Box> */}
       </Overlay>
-      {SnackbarComponent}
     </StyledCard>
   );
 }
