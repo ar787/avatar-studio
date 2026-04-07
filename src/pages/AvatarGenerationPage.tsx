@@ -14,12 +14,12 @@ import {
   downloadAvatarFromLibrary,
   generateAvatar,
   getGeneratedAvatars,
-} from '../services/api';
-import HoverActionCard from '../components/HoverActionCard';
+} from '@/services/api';
+import HoverActionCard from '@/components/HoverActionCard';
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 
-import type { GeneratedAvatarType } from '../types/avatar';
+import type { GeneratedAvatarType } from '@/types/avatar';
 import { useAuth } from '@hooks/useAuth';
 import { useNotification } from '@hooks/useNotification';
 

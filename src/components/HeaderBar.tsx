@@ -3,10 +3,10 @@ import { AppBar, Toolbar, Typography, Box } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { useAuth } from '@hooks/useAuth';
-import CardDisplay from './CardDisplay';
 import Button from '@ui/components/Button';
 import Link from '@ui/components/Link';
-import AccountPopover from './AccountPopover';
+import CardDisplay from '@/components/CardDisplay';
+import AccountPopover from '@/components/AccountPopover';
 
 export default function HeaderBar() {
   const navigate = useNavigate();

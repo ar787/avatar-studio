@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { AuthState } from '../types/auth';
+import type { AuthState } from '@/types/auth';
 
 export const AuthContext = createContext<AuthState>({
   currentUser: null,

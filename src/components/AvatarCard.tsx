@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Card,
   CardActionArea,
@@ -5,8 +6,7 @@ import {
   type CardMediaProps,
   type SxProps,
 } from '@mui/material';
-import type { AvatarType } from '../types/avatar';
-import React from 'react';
+import type { AvatarType } from '@/types/avatar';
 
 type AvatarCardProps = {
   avatar: AvatarType;

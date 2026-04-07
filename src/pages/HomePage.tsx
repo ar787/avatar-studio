@@ -1,11 +1,13 @@
-import { Box, Grid, Fade } from '@mui/material';
 import { use, useCallback, useEffect, useState } from 'react';
-import { getAvatars } from '../services/api';
-import AvatarCard from '../components/AvatarCard';
+
+import { Box, Grid, Fade } from '@mui/material';
 import type { GridBaseProps } from '@mui/material/PigmentGrid';
-import AvatarView from '../components/AvatarView';
-import type { AvatarType } from '../types/avatar';
-import AvatarGenerator from '../components/AvatarGenerator';
+
+import { getAvatars } from '@/services/api';
+import AvatarCard from '@/components/AvatarCard';
+import AvatarView from '@/components/AvatarView';
+import type { AvatarType } from '@/types/avatar';
+import AvatarGenerator from '@/components/AvatarGenerator';
 
 const avatarsPromise = getAvatars();
 const sizes: GridBaseProps['size'] = { xs: 4, md: 4, lg: 2 };

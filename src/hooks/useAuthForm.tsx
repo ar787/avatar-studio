@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { mapFirebaseAuthError } from '../utils/mapFirebaseAuthError';
+import { mapFirebaseAuthError } from '@/utils/mapFirebaseAuthError';
 
 type ValidationRule = [boolean, string];
 type ValidationSchema<V> = Partial<

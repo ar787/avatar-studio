@@ -4,9 +4,9 @@ import {
   signOut,
 } from 'firebase/auth';
 
-import type { AvatarType, GeneratedAvatarType } from '../types/avatar';
-import { auth } from './firebase';
-import { tokenManager } from '../utils/tokenManager';
+import type { AvatarType, GeneratedAvatarType } from '@/types/avatar';
+import { auth } from '@/services/firebase';
+import { tokenManager } from '@/utils/tokenManager';
 
 export const getAvatars = async () => {
   const response = await fetch('/api/avatars');

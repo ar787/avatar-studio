@@ -6,8 +6,8 @@ import IconButton from '@mui/material/IconButton';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
 import { useNotification } from '@hooks/useNotification';
+import type { UserProfile } from '@/types/userProfile';
 
-import type { UserProfile } from '../../types/userProfile';
 import { AccountMenu } from './AccountMenu';
 import { useSignOut } from './hooks/useSignOut';
 

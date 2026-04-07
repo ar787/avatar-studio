@@ -11,7 +11,7 @@ import Login from '@mui/icons-material/Login';
 import Logout from '@mui/icons-material/Logout';
 import Divider from '@mui/material/Divider';
 
-import type { UserProfile } from 'src/types/userProfile';
+import type { UserProfile } from '@/types/userProfile';
 
 type AccountMenuProps = {
   anchorEl: null | HTMLElement;

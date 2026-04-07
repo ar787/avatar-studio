@@ -5,14 +5,13 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 import Link from '@ui/components/Link';
+import Stack from '@mui/material/Stack';
 
 import { useNotification, useAuthForm, useAuth } from '@hooks';
-import AuthLayout from '../layout/AuthLayout';
-import Stack from '@mui/material/Stack';
+import AuthLayout from '@/layout/AuthLayout';
 
 export default function SignUpPage() {
   const [toggle, setToggle] = useState(false);

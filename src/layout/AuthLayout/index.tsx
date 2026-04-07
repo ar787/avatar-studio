@@ -1,9 +1,9 @@
+import type React from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import type React from 'react';
 
 type AuthLayoutProps = {
   children: React.ReactNode;

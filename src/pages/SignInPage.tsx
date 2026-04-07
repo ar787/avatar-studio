@@ -6,7 +6,6 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 import Link from '@ui/components/Link';
@@ -14,8 +13,7 @@ import Link from '@ui/components/Link';
 import { useAuthForm } from '@hooks/useAuthForm';
 import { useNotification } from '@hooks/useNotification';
 import { useAuth } from '@hooks/useAuth';
-
-import AuthLayout from '../layout/AuthLayout';
+import AuthLayout from '@/layout/AuthLayout';
 
 export default function SignInPage() {
   const [toggle, setToggle] = useState(false);

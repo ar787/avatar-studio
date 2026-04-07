@@ -6,17 +6,17 @@ import {
   useState,
   type ReactElement,
 } from 'react';
-import { auth } from '../services/firebase';
-import { AuthContext } from '../contexts/AuthContext';
-import type { AuthState } from '../types/auth';
-import type { UserProfile } from '../types/userProfile';
+import { auth } from '@/services/firebase';
+import { AuthContext } from '@/contexts/AuthContext';
+import type { AuthState } from '@/types/auth';
+import type { UserProfile } from '@/types/userProfile';
 import {
   signOutUser,
   signInUser,
   signUpUser,
   createUserDocument,
   getUserProfile,
-} from '../services/api';
+} from '@/services/api';
 
 export const AuthProvider = ({ children }: { children: ReactElement }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
