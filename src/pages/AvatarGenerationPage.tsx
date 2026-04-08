@@ -10,11 +10,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import type { SxProps } from '@mui/material/styles';
 import Grid, { type GridBaseProps } from '@mui/material/Grid';
 
-import {
-  downloadAvatarFromLibrary,
-  generateAvatar,
-  getGeneratedAvatars,
-} from '@/services/api';
+import { generateAvatar, getGeneratedAvatars } from '@/services/api/avatar.api';
+import { downloadAvatarFromLibrary } from '@/services/api/download.api';
 import HoverActionCard from '@/components/HoverActionCard';
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';

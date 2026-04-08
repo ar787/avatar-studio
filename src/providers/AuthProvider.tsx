@@ -15,9 +15,9 @@ import {
   signInUser,
   signUpUser,
   createUserDocument,
-  getUserProfile,
   signInByGoogleAccount,
-} from '@/services/api';
+} from '@/services/api/auth.api';
+import { getUserProfile } from '@/services/api/user.api';
 
 export const AuthProvider = ({ children }: { children: ReactElement }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);

@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import AvatarGenerationPage from '../../pages/AvatarGenerationPage';
-import { getGeneratedAvatars } from '../../services/api';
-import LoadingPage from '../../pages/LoadingPage';
+import AvatarGenerationPage from '@/pages/AvatarGenerationPage';
+import { getGeneratedAvatars } from '@/services/api/avatar.api';
+import LoadingPage from '@/pages/LoadingPage';
 
 export const Route = createFileRoute('/_layout/avatar-generation')({
   component: AvatarGenerationPage,

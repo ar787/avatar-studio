@@ -3,7 +3,7 @@ import { use, useCallback, useEffect, useState } from 'react';
 import { Box, Grid, Fade } from '@mui/material';
 import type { GridBaseProps } from '@mui/material/PigmentGrid';
 
-import { getAvatars } from '@/services/api';
+import { getAvatars } from '@/services/api/avatar.api';
 import AvatarCard from '@/components/AvatarCard';
 import AvatarView from '@/components/AvatarView';
 import type { AvatarType } from '@/types/avatar';

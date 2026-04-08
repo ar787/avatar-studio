@@ -8,7 +8,7 @@ import Grow from '@mui/material/Grow';
 import Avatar, { type AvatarProps } from '@mui/material/Avatar';
 import type { SxProps } from '@mui/material/styles';
 
-import { getAvatarDownloadBlob } from '@/services/api';
+import { getAvatarDownloadBlob } from '@/services/api/download.api';
 import { analytics } from '@/services/firebase';
 import Button from '@ui/components/Button';
 import { useFileDownload } from '@hooks/useFileDownload';
