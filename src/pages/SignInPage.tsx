@@ -62,7 +62,7 @@ export default function SignInPage() {
       <Divider />
       <Stack spacing={2}>
         <TextField
-          placeholder="Email"
+          placeholder="Email Address *"
           type="email"
           value={values.email}
           helperText={errors.email}
@@ -72,7 +72,7 @@ export default function SignInPage() {
 
         <TextField
           required
-          placeholder="Password"
+          placeholder="Password *"
           type={toggle ? 'text' : 'password'}
           value={values.password}
           helperText={errors.password}

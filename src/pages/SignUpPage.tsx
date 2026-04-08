@@ -65,7 +65,7 @@ export default function SignUpPage() {
       <Divider />
       <Stack spacing={2}>
         <TextField
-          placeholder="Email"
+          placeholder="Email Address *"
           type="email"
           value={values.email}
           helperText={errors.email}
@@ -75,7 +75,7 @@ export default function SignUpPage() {
           }}
         />
         <TextField
-          placeholder="Password"
+          placeholder="Password *"
           type={toggle ? 'text' : 'password'}
           value={values.password}
           onChange={(e) => {
@@ -98,7 +98,7 @@ export default function SignUpPage() {
           }}
         />
         <TextField
-          placeholder="Confirm password"
+          placeholder="Confirm password *"
           type={toggle ? 'text' : 'password'}
           value={values.confirmPassword}
           onChange={(e) => {
