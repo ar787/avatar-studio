@@ -1,11 +1,12 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
 } from 'firebase/auth';
 
 import type { AvatarType, GeneratedAvatarType } from '@/types/avatar';
-import { auth } from '@/services/firebase';
+import { auth, providers } from '@/services/firebase';
 import { tokenManager } from '@/utils/tokenManager';
 
 export const getAvatars = async () => {
@@ -82,6 +83,10 @@ export const signInUser = async (email: string, password: string) => {
 
 export const signOutUser = async () => {
   await signOut(auth);
+};
+
+export const signInByGoogleAccount = () => {
+  return signInWithPopup(auth, providers.google);
 };
 
 export const createUserDocument = async () => {
