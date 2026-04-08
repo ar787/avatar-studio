@@ -120,7 +120,7 @@ type AvatarCardListProps = {
   loading: boolean;
 };
 
-function AvatarCardList({ list, loading }: AvatarCardListProps) {
+function AvatarCardList({ list, loading }: Readonly<AvatarCardListProps>) {
   const skeletonSize = list.length > 0 ? '100%' : { xs: '200px', md: '300px' };
 
   return (

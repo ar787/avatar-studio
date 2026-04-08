@@ -16,7 +16,7 @@ export default function AuthLayout({
   submitAction,
   footer,
   children,
-}: AuthLayoutProps) {
+}: Readonly<AuthLayoutProps>) {
   return (
     <Box
       sx={{
