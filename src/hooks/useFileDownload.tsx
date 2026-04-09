@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { generateUniqueFileName } from '../utils/generateUniqueFileName';
+import { generateUniqueFileName } from '@/utils/generateUniqueFileName';
 
 type UseFileDownloadProps = {
   onDownload: () => Promise<Blob>;

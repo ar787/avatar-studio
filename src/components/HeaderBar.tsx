@@ -1,56 +1,18 @@
-import { useState, type MouseEvent } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem,
-  Box,
-  CircularProgress,
-} from '@mui/material';
+import { AppBar, Toolbar, Typography, Box } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 
 import { useAuth } from '@hooks/useAuth';
-import { useNotification } from '@hooks/useNotification';
-import CardDisplay from './CardDisplay';
 import Button from '@ui/components/Button';
 import Link from '@ui/components/Link';
-import router from '../router';
+import CardDisplay from '@/components/CardDisplay';
+import AccountPopover from '@/components/AccountPopover';
 
 export default function HeaderBar() {
   const navigate = useNavigate();
-  const { addNotification } = useNotification();
+
   const { isAuthenticated, currentUserProfile, currentUser, logOut } =
     useAuth();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  const handleOpenMenu = (event: MouseEvent<HTMLElement>) =>
-    setAnchorEl(event.currentTarget);
-  const handleCloseMenu = () => setAnchorEl(null);
-
-  const handleSignOut = async () => {
-    setIsLoggingOut(true);
-    try {
-      await logOut();
-      navigate({ to: '/sign-in', replace: true });
-      router.update({
-        context: { auth: undefined!, notification: undefined! },
-      });
-      handleCloseMenu();
-    } catch {
-      addNotification({
-        message: 'Something went wrong. Please try again later.',
-        severity: 'error',
-      });
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
-
   return (
     <AppBar position="fixed" color="transparent">
       <Toolbar>
@@ -86,31 +48,11 @@ export default function HeaderBar() {
           >
             Library
           </Button>
-          <IconButton onClick={handleOpenMenu} color="inherit">
-            <AccountCircle />
-          </IconButton>
-
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleCloseMenu}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          >
-            {isAuthenticated ? (
-              <MenuItem
-                onClick={handleSignOut}
-                disabled={isLoggingOut}
-                sx={{ minWidth: 120, justifyContent: 'space-between' }}
-              >
-                {isLoggingOut ? 'Signing out...' : 'Sign Out'}
-                {isLoggingOut && <CircularProgress size={16} color="inherit" />}
-              </MenuItem>
-            ) : (
-              <MenuItem onClick={() => navigate({ to: '/sign-in' })}>
-                Sign In
-              </MenuItem>
-            )}
-          </Menu>
+          <AccountPopover
+            profile={currentUserProfile}
+            isAuthenticated={isAuthenticated}
+            signOut={logOut}
+          />
         </Box>
       </Toolbar>
     </AppBar>

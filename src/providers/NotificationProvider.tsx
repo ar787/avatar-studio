@@ -3,8 +3,8 @@ import { NotificationContext } from '../contexts/NotificationContext';
 import {
   type Notification,
   type NotificationWithoutId,
-} from '../types/notification';
-import NotificationList from '../components/Notification/NotificationList';
+} from '@/types/notification';
+import NotificationList from '@/components/Notification/NotificationList';
 
 export const NotificationProvider = ({
   children,

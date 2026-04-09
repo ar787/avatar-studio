@@ -10,16 +10,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import type { SxProps } from '@mui/material/styles';
 import Grid, { type GridBaseProps } from '@mui/material/Grid';
 
-import {
-  downloadAvatarFromLibrary,
-  generateAvatar,
-  getGeneratedAvatars,
-} from '../services/api';
-import HoverActionCard from '../components/HoverActionCard';
+import { generateAvatar, getGeneratedAvatars } from '@/services/api/avatar.api';
+import { downloadAvatarFromLibrary } from '@/services/api/download.api';
+import HoverActionCard from '@/components/HoverActionCard';
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 
-import type { GeneratedAvatarType } from '../types/avatar';
+import type { GeneratedAvatarType } from '@/types/avatar';
 import { useAuth } from '@hooks/useAuth';
 import { useNotification } from '@hooks/useNotification';
 
@@ -123,7 +120,7 @@ type AvatarCardListProps = {
   loading: boolean;
 };
 
-function AvatarCardList({ list, loading }: AvatarCardListProps) {
+function AvatarCardList({ list, loading }: Readonly<AvatarCardListProps>) {
   const skeletonSize = list.length > 0 ? '100%' : { xs: '200px', md: '300px' };
 
   return (

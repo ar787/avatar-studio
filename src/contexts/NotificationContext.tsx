@@ -2,7 +2,7 @@ import { createContext } from 'react';
 import type {
   Notification,
   NotificationContext as NotificationContextType,
-} from '../types/notification';
+} from '@/types/notification';
 
 export const NotificationContext = createContext<NotificationContextType>({
   notifications: [] as Notification[],

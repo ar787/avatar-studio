@@ -1,7 +1,7 @@
+import React from 'react';
 import { createLink } from '@tanstack/react-router';
 import MuiLink from '@mui/material/Link';
 import type { LinkProps as MuiLinkProps } from '@mui/material/Link';
-import React from 'react';
 
 export type LinkProps = MuiLinkProps;
 

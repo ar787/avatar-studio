@@ -1,32 +1,32 @@
 import { useState } from 'react';
 
-import { mapFirebaseAuthError } from '../utils/mapFirebaseAuthError';
+import { mapFirebaseAuthError } from '@/utils/mapFirebaseAuthError';
 
 type ValidationRule = [boolean, string];
-type ValidationSchema<V> = Partial<
-  Record<keyof V, ValidationRule | ValidationRule[]>
+type ValidationSchema<Value> = Partial<
+  Record<keyof Value, ValidationRule | ValidationRule[]>
 >;
 type AuthActionFunc = (email: string, password: string) => unknown;
-type UseAuthFormOptions<T, V> = {
+type UseAuthFormOptions<T, Value> = {
   authAction: T;
-  inputValues: V;
+  inputValues: Value;
   onUnexpectedError?: () => void;
   onSuccess?: () => void;
-  extraValidation?: (args: V) => ValidationSchema<V>;
+  extraValidation?: (args: Value) => ValidationSchema<Value>;
 };
 
 export function useAuthForm<
   T extends AuthActionFunc,
-  V extends Record<string, string>,
+  Value extends Record<string, string>,
 >({
   inputValues,
   authAction,
   onUnexpectedError,
   onSuccess,
   extraValidation,
-}: UseAuthFormOptions<T, V>) {
+}: UseAuthFormOptions<T, Value>) {
   const [values, setValues] = useState(inputValues);
-  const [errors, setErrors] = useState<Record<keyof V, string>>(values);
+  const [errors, setErrors] = useState<Record<keyof Value, string>>(values);
   const [loading, setLoading] = useState(false);
 
   function setField<K extends keyof typeof values>(key: K, value: string) {
@@ -35,32 +35,36 @@ export function useAuthForm<
   }
 
   function validate() {
-    const newErrors = {} as Record<keyof V, string>;
-
-    (Object.keys(values) as Array<keyof V>).forEach((key) => {
-      const value = values[key];
-      newErrors[key] = value.trim() ? '' : 'This field cannot be empty';
-    });
+    const newErrors = {} as Record<keyof Value, string>;
 
     const rules = (extraValidation?.(values) ?? {}) as Partial<
-      Record<keyof V, ValidationSchema<V>>
+      Record<keyof Value, ValidationSchema<Value>>
     >;
 
-    (Object.keys(rules) as Array<keyof V>).forEach((key) => {
-      const ruleItem = rules[key];
-      if (ruleItem === undefined) {
-        return;
-      }
+    (Object.keys(values) as Array<keyof Value>).forEach((key) => {
+      const value = values[key];
 
-      if (Array.isArray(ruleItem[0])) {
-        const ruleArray = ruleItem as ValidationRule[];
-        const failingRule = ruleArray.find((rule) => rule[0]);
-        newErrors[key] = failingRule ? failingRule[1] : '';
-      } else {
-        const ruleArray = ruleItem as ValidationRule;
-        const failingRule = ruleArray[0] ? ruleArray : undefined;
-        newErrors[key] = failingRule ? failingRule[1] : '';
+      const isRequiredFilled = value.trim() !== '';
+      const requiredRule: ValidationRule = [
+        !isRequiredFilled,
+        'This field cannot be empty',
+      ];
+
+      const fieldRules = rules[key];
+      let normalizedRules: ValidationRule[] = [requiredRule];
+      if (fieldRules) {
+        if (Array.isArray(fieldRules[0])) {
+          normalizedRules = [
+            ...normalizedRules,
+            ...(fieldRules as ValidationRule[]),
+          ];
+        } else {
+          normalizedRules.push(fieldRules as ValidationRule);
+        }
       }
+      const failingRule = normalizedRules.find((rule) => rule[0]);
+
+      newErrors[key] = failingRule ? failingRule[1] : '';
     });
 
     setErrors(newErrors);
@@ -88,5 +92,5 @@ export function useAuthForm<
     }
   }
 
-  return { values, errors, loading, setField, submit };
+  return { values, errors, loading, setField, submit, validate };
 }

@@ -6,16 +6,16 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 import Link from '@ui/components/Link';
+import Divider from '@mui/material/Divider';
 
 import { useAuthForm } from '@hooks/useAuthForm';
 import { useNotification } from '@hooks/useNotification';
 import { useAuth } from '@hooks/useAuth';
-
-import AuthLayout from '../layout/AuthLayout';
+import AuthLayout from '@/layout/AuthLayout';
+import GoogleSignInButton from '@/components/GoogleSignInButton';
 
 export default function SignInPage() {
   const [toggle, setToggle] = useState(false);
@@ -58,9 +58,11 @@ export default function SignInPage() {
 
   return (
     <AuthLayout title="Sign In" submitAction={submitAction} footer={footer}>
+      <GoogleSignInButton title="Sign in with Google" />
+      <Divider />
       <Stack spacing={2}>
         <TextField
-          placeholder="Email"
+          placeholder="Email Address *"
           type="email"
           value={values.email}
           helperText={errors.email}
@@ -70,7 +72,7 @@ export default function SignInPage() {
 
         <TextField
           required
-          placeholder="Password"
+          placeholder="Password *"
           type={toggle ? 'text' : 'password'}
           value={values.password}
           helperText={errors.password}

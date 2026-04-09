@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { AuthState } from '../types/auth';
+import type { AuthState } from '@/types/auth';
 
 export const AuthContext = createContext<AuthState>({
   currentUser: null,
@@ -17,5 +17,8 @@ export const AuthContext = createContext<AuthState>({
   },
   signUp: () => {
     throw new Error('signUp must be used within an AuthProvider');
+  },
+  signInWithGoogle: () => {
+    throw new Error('signInWithGoogle must be used within an AuthProvider');
   },
 });

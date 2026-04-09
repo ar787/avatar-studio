@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-
+import { logEvent } from 'firebase/analytics';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Zoom from '@mui/material/Zoom';
@@ -7,10 +7,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Grow from '@mui/material/Grow';
 import Avatar, { type AvatarProps } from '@mui/material/Avatar';
 import type { SxProps } from '@mui/material/styles';
-import { logEvent } from 'firebase/analytics';
 
-import { getAvatarDownloadBlob } from '../services/api';
-import { analytics } from '../services/firebase';
+import { getAvatarDownloadBlob } from '@/services/api/download.api';
+import { analytics } from '@/services/firebase';
 import Button from '@ui/components/Button';
 import { useFileDownload } from '@hooks/useFileDownload';
 import { useNotification } from '@hooks/useNotification';

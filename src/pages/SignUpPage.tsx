@@ -5,14 +5,15 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 import Link from '@ui/components/Link';
-
+import GoogleSignInButton from '@/components/GoogleSignInButton';
 import { useNotification, useAuthForm, useAuth } from '@hooks';
-import AuthLayout from '../layout/AuthLayout';
-import Stack from '@mui/material/Stack';
+import AuthLayout from '@/layout/AuthLayout';
 
 export default function SignUpPage() {
   const [toggle, setToggle] = useState(false);
@@ -60,9 +61,11 @@ export default function SignUpPage() {
 
   return (
     <AuthLayout title="Sign Up" submitAction={submitAction} footer={footer}>
+      <GoogleSignInButton title="Continue with Google" />
+      <Divider />
       <Stack spacing={2}>
         <TextField
-          placeholder="Email"
+          placeholder="Email Address *"
           type="email"
           value={values.email}
           helperText={errors.email}
@@ -72,7 +75,7 @@ export default function SignUpPage() {
           }}
         />
         <TextField
-          placeholder="Password"
+          placeholder="Password *"
           type={toggle ? 'text' : 'password'}
           value={values.password}
           onChange={(e) => {
@@ -95,7 +98,7 @@ export default function SignUpPage() {
           }}
         />
         <TextField
-          placeholder="Confirm password"
+          placeholder="Confirm password *"
           type={toggle ? 'text' : 'password'}
           value={values.confirmPassword}
           onChange={(e) => {

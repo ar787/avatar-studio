@@ -10,4 +10,5 @@ export type AuthState = {
   logOut: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<UserCredential>;
   signUp: (email: string, password: string) => Promise<UserCredential>;
+  signInWithGoogle: () => Promise<UserCredential>;
 };

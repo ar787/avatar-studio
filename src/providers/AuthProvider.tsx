@@ -6,17 +6,18 @@ import {
   useState,
   type ReactElement,
 } from 'react';
-import { auth } from '../services/firebase';
-import { AuthContext } from '../contexts/AuthContext';
-import type { AuthState } from '../types/auth';
-import type { UserProfile } from '../types/userProfile';
+import { auth } from '@/services/firebase';
+import { AuthContext } from '@/contexts/AuthContext';
+import type { AuthState } from '@/types/auth';
+import type { UserProfile } from '@/types/userProfile';
 import {
   signOutUser,
   signInUser,
   signUpUser,
   createUserDocument,
-  getUserProfile,
-} from '../services/api';
+  signInByGoogleAccount,
+} from '@/services/api/auth.api';
+import { getUserProfile } from '@/services/api/user.api';
 
 export const AuthProvider = ({ children }: { children: ReactElement }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -32,13 +33,12 @@ export const AuthProvider = ({ children }: { children: ReactElement }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
-      setIsInitialLoading(false);
-
       if (user) {
-        refreshProfile();
+        await refreshProfile();
       } else {
         setCurrentUserProfile(null);
       }
+      setIsInitialLoading(false);
     });
 
     return unsubscribe;
@@ -57,16 +57,32 @@ export const AuthProvider = ({ children }: { children: ReactElement }) => {
     await signOutUser();
   }, []);
 
-  const signIn = useCallback((email: string, password: string) => {
-    return signInUser(email, password);
-  }, []);
+  const signIn = useCallback(
+    async (email: string, password: string) => {
+      const result = await signInUser(email, password);
+      refreshProfile();
+      return result;
+    },
+    [refreshProfile],
+  );
 
-  const signUp = useCallback(async (email: string, password: string) => {
-    const result = await signUpUser(email, password);
+  const signUp = useCallback(
+    async (email: string, password: string) => {
+      const result = await signUpUser(email, password);
+      await createUserDocument();
+      await refreshProfile();
+
+      return result;
+    },
+    [refreshProfile],
+  );
+
+  const signInWithGoogle = useCallback(async () => {
+    const result = await signInByGoogleAccount();
     await createUserDocument();
-
+    await refreshProfile();
     return result;
-  }, []);
+  }, [refreshProfile]);
 
   const value: AuthState = useMemo(() => {
     return {
@@ -74,21 +90,21 @@ export const AuthProvider = ({ children }: { children: ReactElement }) => {
       currentUserProfile,
       isAuthenticated: currentUser !== null,
       isInitialLoading,
-      refreshProfile,
       setProfileData,
       logOut,
       signIn,
       signUp,
+      signInWithGoogle,
     };
   }, [
     currentUser,
     currentUserProfile,
     isInitialLoading,
-    refreshProfile,
     setProfileData,
     logOut,
     signIn,
     signUp,
+    signInWithGoogle,
   ]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
