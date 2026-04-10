@@ -42,7 +42,7 @@ export const AccountMenu = ({
       slotProps={slotProps}
     >
       <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Avatar />
+        <Avatar src={profile?.picture} />
         <Box>
           <Typography variant="body2" fontWeight="bold">
             {isAuthenticated ? profile?.displayName : 'Guest'}
