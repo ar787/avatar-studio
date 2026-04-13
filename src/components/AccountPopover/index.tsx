@@ -10,6 +10,7 @@ import type { UserProfile } from '@/types/userProfile';
 
 import { AccountMenu } from './AccountMenu';
 import { useSignOut } from './hooks/useSignOut';
+import { Avatar } from '@mui/material';
 
 const slotProps: MenuProps['slotProps'] = {
   paper: {
@@ -65,7 +66,11 @@ export default function AccountPopover({
   return (
     <>
       <IconButton onClick={handleOpen} color="inherit">
-        <AccountCircle />
+        {profile?.picture ? (
+          <Avatar src={profile.picture} sx={{ width: 30, height: 30 }} />
+        ) : (
+          <AccountCircle />
+        )}
       </IconButton>
       <AccountMenu
         anchorEl={anchorEl}
