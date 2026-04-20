@@ -34,3 +34,26 @@ export const updateProfile = async (displayName: string) => {
 
   return result.data;
 };
+
+export const updateProfilePicture = async (
+  file: File,
+): Promise<{ status: boolean; message: string; picture: string }> => {
+  const token = await tokenManager.getToken();
+  const formData = new FormData();
+  formData.append('picture', file);
+  const response = await fetch('api/user/profile/image', {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.message || 'Failed to upload picture');
+  }
+
+  return result;
+};

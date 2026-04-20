@@ -1,13 +1,16 @@
+import React from 'react';
 import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
+import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import type { SxProps } from '@mui/material/styles';
-import { Typography } from '@mui/material';
 
 type ProfileAvatarProps = {
   src: string;
+  onUpload: (file: File, imageUrl: string) => void;
 };
 
-const boxSx: SxProps = {
+const buttonBaseSx: SxProps = {
   border: '2px dashed #fff',
   borderRadius: '50%',
   width: '140px',
@@ -15,6 +18,10 @@ const boxSx: SxProps = {
   padding: 2,
   position: 'relative',
   backgroundColor: '#ebe9e90f',
+  '&:has(:focus-visible)': {
+    outline: '2px solid',
+    outlineOffset: '2px',
+  },
 };
 
 const avatarSx: SxProps = {
@@ -25,13 +32,51 @@ const avatarSx: SxProps = {
   position: 'absolute',
 };
 
-export default function ProfileAvatar({ src }: Readonly<ProfileAvatarProps>) {
+export default function ProfileAvatar({
+  src,
+  onUpload,
+}: Readonly<ProfileAvatarProps>) {
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        onUpload(file, reader.result as string);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
   return (
     <Box>
-      <Box sx={boxSx}>
+      <ButtonBase
+        component="label"
+        role={undefined}
+        tabIndex={-1}
+        aria-label="Avatar image"
+        sx={buttonBaseSx}
+      >
         <Avatar src={src} sx={avatarSx} />
-      </Box>
-      <Typography variant="caption">Click or drop image to upload</Typography>
+        <input
+          type="file"
+          accept="image/*"
+          style={{
+            border: 0,
+            clip: 'rect(0 0 0 0)',
+            height: '1px',
+            margin: '-1px',
+            overflow: 'hidden',
+            padding: 0,
+            position: 'absolute',
+            whiteSpace: 'nowrap',
+            width: '1px',
+          }}
+          onChange={handleAvatarChange}
+        />
+      </ButtonBase>
+      <Typography variant="caption" component="p">
+        Click or drop image to upload
+      </Typography>
     </Box>
   );
 }
