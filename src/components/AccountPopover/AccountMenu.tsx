@@ -12,6 +12,8 @@ import Logout from '@mui/icons-material/Logout';
 import Divider from '@mui/material/Divider';
 
 import type { UserProfile } from '@/types/userProfile';
+import Settings from '@mui/icons-material/Settings';
+import { useNavigate } from '@tanstack/react-router';
 
 type AccountMenuProps = {
   anchorEl: null | HTMLElement;
@@ -34,6 +36,7 @@ export const AccountMenu = ({
   onSignIn,
   onSignOut,
 }: Readonly<AccountMenuProps>) => {
+  const navigate = useNavigate();
   return (
     <Menu
       anchorEl={anchorEl}
@@ -55,16 +58,29 @@ export const AccountMenu = ({
         </Box>
       </Box>
 
-      <Divider sx={{ my: 1 }} />
-
       {isAuthenticated ? (
-        <MenuItem onClick={onSignOut} disabled={isSignOut}>
-          <ListItemIcon>
-            <Logout />
-          </ListItemIcon>
-          <ListItemText primary="Sign Out" />
-          {isSignOut && <CircularProgress size={20} />}
-        </MenuItem>
+        <Box>
+          <MenuItem
+            onClick={() => {
+              navigate({ to: '/settings' });
+              onClose();
+            }}
+          >
+            <ListItemIcon>
+              <Settings />
+            </ListItemIcon>
+            <ListItemText primary="Manage Account" />
+          </MenuItem>
+
+          <Divider sx={{ my: 1 }} />
+          <MenuItem onClick={onSignOut} disabled={isSignOut}>
+            <ListItemIcon>
+              <Logout />
+            </ListItemIcon>
+            <ListItemText primary="Sign Out" />
+            {isSignOut && <CircularProgress size={20} />}
+          </MenuItem>
+        </Box>
       ) : (
         <MenuItem onClick={onSignIn}>
           <ListItemIcon color="inherit">
