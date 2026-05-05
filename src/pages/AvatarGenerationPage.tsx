@@ -17,8 +17,11 @@ import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 
 import type { GeneratedAvatarType } from '@/types/avatar';
-import { useAuth } from '@hooks/useAuth';
+
 import { useNotification } from '@hooks/useNotification';
+import { useUser } from '@/hooks';
+import { useAppSelector } from '@/store/hooks';
+import { selectAuthUser } from '@/store/auth/authSelectors';
 
 const containerSx: SxProps = {
   display: 'flex',
@@ -34,8 +37,9 @@ export default function AvatarGenerationPage() {
   const initialData = useLoaderData({ from: '/_layout/avatar-generation' });
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { setProfileData, currentUser } = useAuth();
-  const { addNotification } = useNotification();
+  const { setProfile } = useUser();
+  const notify = useNotification();
+  const user = useAppSelector(selectAuthUser);
   const [value, setValue] = useState('');
   const [isAvatarGenerated, setIsAvatarGenerated] = useState(false);
   const [list, setList] = useState(initialData);
@@ -49,7 +53,7 @@ export default function AvatarGenerationPage() {
       try {
         const { data } = await generateAvatar(prompt);
         const res = await getGeneratedAvatars();
-        setProfileData({ credits: data?.remainingCredits ?? 0 });
+        setProfile({ credits: data?.remainingCredits ?? 0 });
         setList(res);
       } catch (error) {
         if (error instanceof Error) {
@@ -58,11 +62,7 @@ export default function AvatarGenerationPage() {
           if (error.message === 'Insufficient credits.') {
             message = 'You have insufficient credits.';
           }
-
-          addNotification({
-            message,
-            severity: 'error',
-          });
+          notify.error(message);
         }
       } finally {
         generationStarted.current = false;
@@ -71,12 +71,12 @@ export default function AvatarGenerationPage() {
         navigate({
           to: '/avatar-generation',
           state: (prev) => ({ ...prev, prompt: undefined }),
-          search: { userId: currentUser?.uid },
+          search: { userId: user?.uid },
           replace: true,
         });
       }
     },
-    [currentUser?.uid, navigate, setProfileData, addNotification],
+    [user?.uid, navigate, setProfile, notify],
   );
 
   useEffect(() => {

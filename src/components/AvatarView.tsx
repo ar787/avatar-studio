@@ -38,7 +38,7 @@ export default function AvatarView({
   imageUrl,
   name,
 }: Readonly<AvatarViewProps>) {
-  const { addNotification } = useNotification();
+  const notify = useNotification();
   const { handleDownload, loading } = useFileDownload({
     onDownload: () => getAvatarDownloadBlob(name),
     onSuccess: () => {
@@ -47,10 +47,7 @@ export default function AvatarView({
       });
     },
     onError: () => {
-      addNotification({
-        message: 'Download failed. Please try again later.',
-        severity: 'error',
-      });
+      notify.error('Download failed. Please try again later.');
     },
   });
 

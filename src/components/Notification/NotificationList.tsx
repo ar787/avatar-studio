@@ -3,26 +3,24 @@ import { createPortal } from 'react-dom';
 
 import type { Notification } from '../../types/notification';
 import NotificationItem from './NotificationItem';
-import { useNotification } from '@hooks/useNotification';
 
-type NotificationListProps = {
-  notifications: Notification[];
-};
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { selectNotifications } from '@/store/notification/notificationSelectors';
+import { removeNotification } from '@/store/notification/notificationSlice';
 
-export default function NotificationItemList({
-  notifications,
-}: Readonly<NotificationListProps>) {
-  const { removeNotification } = useNotification();
+export default function NotificationItemList() {
   const notificationRootId = useMemo(
     () => document.getElementById('notifications-root'),
     [],
   );
+  const dispatch = useAppDispatch();
+  const notifications = useAppSelector(selectNotifications);
 
   const handleClose = useCallback(
     (id: Notification['id']) => {
-      removeNotification(id);
+      dispatch(removeNotification(id));
     },
-    [removeNotification],
+    [dispatch],
   );
 
   if (notificationRootId === null) return null;

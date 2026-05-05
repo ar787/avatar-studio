@@ -37,7 +37,7 @@ export default function AccountPopover({
 }: Readonly<AccountPopoverProps>) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const { addNotification } = useNotification();
+  const notify = useNotification();
 
   const { loading, handleSignOut } = useSignOut({
     signOut,
@@ -45,10 +45,7 @@ export default function AccountPopover({
       handleClose();
     },
     onError: () => {
-      addNotification({
-        message: 'Something went wrong. Please try again later.',
-        severity: 'error',
-      });
+      notify.error('Something went wrong. Please try again later.');
     },
   });
   const handleSingIn = () => {

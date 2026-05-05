@@ -10,7 +10,7 @@ export const getUserProfile = async () => {
   });
 
   const result = await response.json();
-  return result;
+  return result.data;
 };
 
 export const updateProfile = async (displayName: string) => {

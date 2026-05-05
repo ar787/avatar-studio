@@ -51,15 +51,12 @@ export default function HoverActionCard({
   src,
   onDownload,
 }: Readonly<HoverActionCardProps>) {
-  const { addNotification } = useNotification();
+  const notify = useNotification();
   const { handleDownload, loading } = useFileDownload({
     onDownload,
     onSuccess: () => {},
     onError: () => {
-      addNotification({
-        message: 'Download failed. Please try again later.',
-        severity: 'error',
-      });
+      notify.error('Download failed. Please try again later.');
     },
   });
 
