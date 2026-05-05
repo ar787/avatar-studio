@@ -12,13 +12,14 @@ import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 import Link from '@ui/components/Link';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
-import { useNotification, useAuthForm, useAuth } from '@hooks';
+import { useNotification, useAuthForm } from '@hooks';
 import AuthLayout from '@/layout/AuthLayout';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function SignUpPage() {
   const [toggle, setToggle] = useState(false);
   const navigate = useNavigate();
-  const { addNotification } = useNotification();
+  const notify = useNotification();
   const { signUp } = useAuth();
   const { values, errors, loading, submit, setField } = useAuthForm({
     inputValues: {
@@ -41,10 +42,7 @@ export default function SignUpPage() {
       navigate({ to: '/' });
     },
     onUnexpectedError: () =>
-      addNotification({
-        severity: 'error',
-        message: 'Something went wrong. Please try again later.',
-      }),
+      notify.error('Something went wrong. Please try again later.'),
   });
 
   const submitAction = (

@@ -1,17 +1,15 @@
 import { type AlertColor, type SnackbarProps } from '@mui/material';
 
-export type Notification = {
-  id: string;
+export type BaseNotification = {
   message: string;
   severity: AlertColor;
+};
+
+export type Notification = {
+  id: string;
   duration?: number;
   action?: React.ReactNode;
   anchorOrigin?: SnackbarProps['anchorOrigin'];
-};
-export type NotificationWithoutId = Omit<Notification, 'id'>;
+} & BaseNotification;
 
-export type NotificationContext = {
-  notifications: Notification[];
-  addNotification: (notification: NotificationWithoutId) => void;
-  removeNotification: (id: string) => void;
-};
+export type NotificationWithoutId = Omit<Notification, 'id'>;

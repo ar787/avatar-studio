@@ -1,21 +1,21 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
 
-import { AuthProvider } from '@/providers/AuthProvider';
-import { NotificationProvider } from '@/providers/NotificationProvider';
 import { ThemeProvider } from '@ui/theme/ThemeProvider';
-
+import { store } from '@/store';
+import NotificationList from '@/components/Notification/NotificationList';
 import App from './App';
+
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
+    <Provider store={store}>
       <ThemeProvider>
-        <NotificationProvider>
-          <App />
-        </NotificationProvider>
+        <App />
+        <NotificationList />
       </ThemeProvider>
-    </AuthProvider>
+    </Provider>
   </StrictMode>,
 );

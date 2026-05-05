@@ -1,27 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
+
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
 import Link from '@ui/components/Link';
-import Divider from '@mui/material/Divider';
 
 import { useAuthForm } from '@hooks/useAuthForm';
 import { useNotification } from '@hooks/useNotification';
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import AuthLayout from '@/layout/AuthLayout';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
 
 export default function SignInPage() {
   const [toggle, setToggle] = useState(false);
   const navigate = useNavigate();
-  const { addNotification } = useNotification();
+  const notify = useNotification();
   const { signIn } = useAuth();
+
   const { values, errors, loading, submit, setField } = useAuthForm({
     inputValues: {
       email: '',
@@ -38,10 +39,7 @@ export default function SignInPage() {
       navigate({ to: '/' });
     },
     onUnexpectedError: () =>
-      addNotification({
-        severity: 'error',
-        message: 'Something went wrong. Please try again later.',
-      }),
+      notify.error('Something went wrong. Please try again later.'),
   });
 
   const submitAction = (

@@ -5,7 +5,12 @@ import type { SxProps } from '@mui/material/styles';
 
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
-import { useAuth } from '@hooks/useAuth';
+import { useAppSelector } from '@/store/hooks';
+import {
+  selectAuthUser,
+  selectIsAuthenticated,
+} from '@/store/auth/authSelectors';
+import { selectUserProfile } from '@/store/user/userSelectors';
 
 const containerSx: SxProps = {
   display: 'flex',
@@ -24,13 +29,16 @@ const inputContainerSx: SxProps = {
 
 export default function AvatarGenerator() {
   const [value, setValue] = useState('');
-  const { isAuthenticated, currentUser, currentUserProfile } = useAuth();
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const user = useAppSelector(selectAuthUser);
+  const profile = useAppSelector(selectUserProfile);
+
   const navigate = useNavigate();
 
   function onGenerate() {
     navigate({
       to: '/avatar-generation',
-      search: { userId: currentUser?.uid },
+      search: { userId: user?.uid },
       state: {
         prompt: value,
       },
@@ -39,11 +47,11 @@ export default function AvatarGenerator() {
 
   const getTooltipTitle = useCallback(() => {
     if (!isAuthenticated) return 'Sign in to generate';
-    if (currentUserProfile && currentUserProfile.credits <= 0) {
+    if (profile && profile.credits <= 0) {
       return 'Insufficient credits';
     }
     return '';
-  }, [currentUserProfile, isAuthenticated]);
+  }, [profile, isAuthenticated]);
 
   return (
     <Box sx={containerSx}>

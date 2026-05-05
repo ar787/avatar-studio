@@ -31,10 +31,7 @@ export const Route = createFileRoute('/_layout/avatar-generation')({
       return await getGeneratedAvatars();
     } catch (error) {
       if (error instanceof Error) {
-        context.notification.addNotification({
-          message: error.message,
-          severity: 'error',
-        });
+        context.notification.error(error.message);
       }
       return [];
     }
