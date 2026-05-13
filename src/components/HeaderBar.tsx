@@ -13,6 +13,7 @@ import {
   selectIsAuthenticated,
 } from '@/store/auth/authSelectors';
 import { selectUserProfile } from '@/store/user/userSelectors';
+import AvatarCreation from './AvatarCreation';
 
 export default function HeaderBar() {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ export default function HeaderBar() {
             gap: '10px',
           }}
         >
+          <AvatarCreation />
           {isAuthenticated && <CardDisplay credits={profile?.credits ?? 0} />}
           <Button
             variant="outlined"
