@@ -1,12 +1,12 @@
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
-import type { AuthState } from '@/types/auth';
-import type { NotificationContext } from '@/types/notification';
+import type { NotificationAPI } from '@/hooks/useNotification';
+import type { UseAuthReturn } from '@/hooks';
 
 type RouterContext = {
-  auth: AuthState;
-  notification: NotificationContext;
+  auth: UseAuthReturn;
+  notification: NotificationAPI;
 };
 
 export const Route = createRootRouteWithContext<RouterContext>()({

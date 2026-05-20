@@ -1,9 +1,10 @@
 import { useNavigate } from '@tanstack/react-router';
+import type { SxProps } from '@mui/material/styles';
+
 import Button from '@ui/components/Button';
 import { useNotification } from '@hooks/useNotification';
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import { GoogleIcon } from '@/ui/icons';
-import type { SxProps } from '@mui/material/styles';
 
 type GoogleSignInButtonProps = {
   title: string;
@@ -25,17 +26,14 @@ export default function GoogleSignInButton({
 }: Readonly<GoogleSignInButtonProps>) {
   const navigate = useNavigate();
   const { signInWithGoogle } = useAuth();
-  const { addNotification } = useNotification();
+  const notify = useNotification();
 
   async function onSignInByGoogle() {
     try {
       await signInWithGoogle();
       navigate({ to: '/' });
     } catch {
-      addNotification({
-        severity: 'error',
-        message: 'Something went wrong. Please try again later.',
-      });
+      notify.error('Something went wrong. Please try again later.');
     }
   }
 

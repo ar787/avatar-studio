@@ -18,7 +18,7 @@ export default function ProfileForm({
 }: Readonly<ProfileForm>) {
   const [loading, setLoading] = useState(false);
   const [displayNameValue, setDisplayNameValue] = useState(values.displayName);
-  const { addNotification } = useNotification();
+  const notify = useNotification();
 
   useEffect(() => {
     setDisplayNameValue(values.displayName);
@@ -29,15 +29,9 @@ export default function ProfileForm({
     try {
       setLoading(true);
       await onSubmit({ displayName: displayNameValue });
-      addNotification({
-        severity: 'info',
-        message: 'Profile changes saved successfully.',
-      });
+      notify.info('Profile changes saved successfully.');
     } catch {
-      addNotification({
-        severity: 'error',
-        message: 'Something went wrong. Please try again later.',
-      });
+      notify.error('Something went wrong. Please try again later.');
     } finally {
       setLoading(false);
     }

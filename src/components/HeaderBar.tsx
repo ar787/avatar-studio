@@ -2,17 +2,26 @@ import { useNavigate } from '@tanstack/react-router';
 import { AppBar, Toolbar, Typography, Box } from '@mui/material';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
-import { useAuth } from '@hooks/useAuth';
 import Button from '@ui/components/Button';
 import Link from '@ui/components/Link';
 import CardDisplay from '@/components/CardDisplay';
 import AccountPopover from '@/components/AccountPopover';
+import { useAppSelector } from '@/store/hooks';
+import { useAuth } from '@/hooks/useAuth';
+import {
+  selectAuthUser,
+  selectIsAuthenticated,
+} from '@/store/auth/authSelectors';
+import { selectUserProfile } from '@/store/user/userSelectors';
+import AvatarCreation from './AvatarCreation';
 
 export default function HeaderBar() {
   const navigate = useNavigate();
+  const { logOut } = useAuth();
+  const user = useAppSelector(selectAuthUser);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const profile = useAppSelector(selectUserProfile);
 
-  const { isAuthenticated, currentUserProfile, currentUser, logOut } =
-    useAuth();
   return (
     <AppBar position="fixed" color="transparent">
       <Toolbar>
@@ -31,9 +40,8 @@ export default function HeaderBar() {
             gap: '10px',
           }}
         >
-          {isAuthenticated && (
-            <CardDisplay credits={currentUserProfile?.credits ?? 0} />
-          )}
+          <AvatarCreation />
+          {isAuthenticated && <CardDisplay credits={profile?.credits ?? 0} />}
           <Button
             variant="outlined"
             endIcon={<PhotoLibraryIcon />}
@@ -41,7 +49,7 @@ export default function HeaderBar() {
               navigate({
                 to: '/avatar-generation',
                 search: {
-                  userId: currentUser?.uid,
+                  userId: user?.uid,
                 },
               });
             }}
@@ -49,7 +57,7 @@ export default function HeaderBar() {
             Library
           </Button>
           <AccountPopover
-            profile={currentUserProfile}
+            profile={profile}
             isAuthenticated={isAuthenticated}
             signOut={logOut}
           />

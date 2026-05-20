@@ -7,7 +7,6 @@ import { getAvatars } from '@/services/api/avatar.api';
 import AvatarCard from '@/components/AvatarCard';
 import AvatarView from '@/components/AvatarView';
 import type { AvatarType } from '@/types/avatar';
-import AvatarGenerator from '@/components/AvatarGenerator';
 
 const avatarsPromise = getAvatars();
 const sizes: GridBaseProps['size'] = { xs: 4, md: 4, lg: 2 };
@@ -33,7 +32,6 @@ export default function HomePage() {
 
   return (
     <Box sx={{ paddingTop: 5 }}>
-      <AvatarGenerator />
       <Grid container spacing={2} sx={{ mt: 4 }}>
         {avatars.map((el, index) => (
           <Fade

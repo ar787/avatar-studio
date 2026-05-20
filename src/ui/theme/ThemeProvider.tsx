@@ -4,11 +4,19 @@ import { theme } from './index';
 
 declare module '@mui/material/styles' {
   interface Palette {
+    modal: {
+      background: string;
+      border: string;
+    };
     customAction: {
       menuHover: string;
     };
   }
   interface PaletteOptions {
+    modal: {
+      background: string;
+      border: string;
+    };
     customAction: {
       menuHover: string;
     };

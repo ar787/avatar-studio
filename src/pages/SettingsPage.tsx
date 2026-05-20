@@ -1,34 +1,35 @@
-import ProfileAvatar from '@/components/Settings/ProfileAvatar';
-import ProfileForm from '@/components/Settings/ProfileForm';
-import { useAuth, useNotification } from '@/hooks';
-import Button from '@/ui/components/Button';
-
 import { Stack, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
+
+import ProfileAvatar from '@/components/Settings/ProfileAvatar';
+import ProfileForm from '@/components/Settings/ProfileForm';
+import { useNotification, useUser } from '@/hooks';
+import Button from '@/ui/components/Button';
 import { updateProfile, updateProfilePicture } from '@/services/api/user.api';
+import { useAuth } from '@/hooks/useAuth';
+import { useAppSelector } from '@/store/hooks';
+import { selectUserProfile } from '@/store/user/userSelectors';
 
 export default function SettingsPage() {
-  const { currentUserProfile, setProfileData, logOut } = useAuth();
-  const { addNotification } = useNotification();
+  const { setProfile } = useUser();
+  const notify = useNotification();
+  const { logOut } = useAuth();
+  const profile = useAppSelector(selectUserProfile);
+
   const handleOnSubmit = async ({ displayName }: { displayName: string }) => {
     await updateProfile(displayName);
-    setProfileData({ displayName });
+    setProfile({ displayName });
   };
 
   const handleUpdateProfilePicture = async (file: File) => {
     try {
       const { picture } = await updateProfilePicture(file);
-      addNotification({
-        severity: 'info',
-        message: 'Profile picture updated successfully.',
-      });
-      setProfileData({ picture });
+      notify.info('Profile picture updated successfully.');
+      setProfile({ picture });
     } catch (error) {
-      addNotification({
-        severity: 'error',
-        message:
-          error instanceof Error ? error.message : 'Failed to upload image.',
-      });
+      notify.error(
+        error instanceof Error ? error.message : 'Failed to upload image.',
+      );
     }
   };
 
@@ -38,13 +39,13 @@ export default function SettingsPage() {
         <Stack spacing={2} sx={{ width: { xs: '100%', md: '50%' } }}>
           <Typography variant="caption">Profile Settings</Typography>
           <ProfileAvatar
-            src={currentUserProfile?.picture ?? ''}
+            src={profile?.picture ?? ''}
             onUpload={handleUpdateProfilePicture}
           />
           <ProfileForm
             values={{
-              displayName: currentUserProfile?.displayName ?? '',
-              email: currentUserProfile?.email ?? '',
+              displayName: profile?.displayName ?? '',
+              email: profile?.email ?? '',
             }}
             onSubmit={handleOnSubmit}
           />
