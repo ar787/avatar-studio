@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Card, CardMedia, Box, IconButton, styled } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-
+import AddIcon from '@mui/icons-material/Add';
 import { useFileDownload } from '@hooks/useFileDownload';
 import { useNotification } from '@hooks/useNotification';
+import AlbumChoose from './Album/AlbumChoose';
 
 const StyledCard = styled(Card)(() => ({
   position: 'relative',
@@ -43,14 +45,18 @@ const FloatingButton = styled(IconButton)(() => ({
 }));
 
 type HoverActionCardProps = {
+  id: string;
   src: string;
   onDownload: () => Promise<Blob>;
 };
 
 export default function HoverActionCard({
+  id,
   src,
   onDownload,
 }: Readonly<HoverActionCardProps>) {
+  const [openChooseDialog, setOpenChooseDialog] = useState(false);
+
   const notify = useNotification();
   const { handleDownload, loading } = useFileDownload({
     onDownload,
@@ -61,37 +67,36 @@ export default function HoverActionCard({
   });
 
   return (
-    <StyledCard>
-      <CardMedia component="img" image={src} alt="avatar" />
+    <>
+      <StyledCard>
+        <CardMedia component="img" image={src} alt="avatar" />
 
-      <Overlay>
-        {/* Top Row */}
-        <ActionGroup>
-          {/* <FloatingButton size="small">
-            <CheckIcon />
-          </FloatingButton> */}
+        <Overlay>
+          <ActionGroup>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <FloatingButton
+                size="small"
+                onClick={() => setOpenChooseDialog(true)}
+              >
+                <AddIcon />
+              </FloatingButton>
+              <FloatingButton
+                size="small"
+                onClick={handleDownload}
+                loading={loading}
+              >
+                <DownloadIcon />
+              </FloatingButton>
+            </Box>
+          </ActionGroup>
+        </Overlay>
+      </StyledCard>
 
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            {/* <FloatingButton size="small">
-              <ShareIcon />
-            </FloatingButton> */}
-            <FloatingButton
-              size="small"
-              onClick={handleDownload}
-              loading={loading}
-            >
-              <DownloadIcon />
-            </FloatingButton>
-          </Box>
-        </ActionGroup>
-
-        {/* Bottom Row */}
-        {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <FloatingButton size="small">
-            <CropFreeIcon />
-          </FloatingButton>
-        </Box> */}
-      </Overlay>
-    </StyledCard>
+      <AlbumChoose
+        open={openChooseDialog}
+        onClose={() => setOpenChooseDialog(false)}
+        avatarId={id}
+      />
+    </>
   );
 }
