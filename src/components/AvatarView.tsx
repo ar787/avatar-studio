@@ -18,6 +18,7 @@ type AvatarViewProps = {
   name: string;
   open: boolean;
   onClose: () => void;
+  onDownload?: () => Promise<Blob>;
 };
 
 const sx: SxProps = {
@@ -37,10 +38,11 @@ export default function AvatarView({
   onClose,
   imageUrl,
   name,
+  onDownload,
 }: Readonly<AvatarViewProps>) {
   const notify = useNotification();
   const { handleDownload, loading } = useFileDownload({
-    onDownload: () => getAvatarDownloadBlob(name),
+    onDownload: onDownload ?? (() => getAvatarDownloadBlob(name)),
     onSuccess: () => {
       logEvent(analytics, 'download_image', {
         image_name: name,

@@ -39,6 +39,7 @@ function AvatarCardList({ list }: Readonly<AvatarCardListProps>) {
       {list.map((avatar) => (
         <Grid size={sizes} key={avatar.name}>
           <HoverActionCard
+            id={avatar.id}
             src={avatar.url}
             onDownload={() => downloadAvatarFromLibrary(avatar.name)}
           />
