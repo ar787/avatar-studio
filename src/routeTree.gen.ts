@@ -15,6 +15,8 @@ import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutAvatarGenerationRouteImport } from './routes/_layout/avatar-generation'
+import { Route as LayoutAlbumsIndexRouteImport } from './routes/_layout/albums/index'
+import { Route as LayoutAlbumsAlbumIdRouteImport } from './routes/_layout/albums/$albumId'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -45,6 +47,16 @@ const LayoutAvatarGenerationRoute = LayoutAvatarGenerationRouteImport.update({
   path: '/avatar-generation',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutAlbumsIndexRoute = LayoutAlbumsIndexRouteImport.update({
+  id: '/albums/',
+  path: '/albums/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutAlbumsAlbumIdRoute = LayoutAlbumsAlbumIdRouteImport.update({
+  id: '/albums/$albumId',
+  path: '/albums/$albumId',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
@@ -52,6 +64,8 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof SignUpRoute
   '/avatar-generation': typeof LayoutAvatarGenerationRoute
   '/settings': typeof LayoutSettingsRoute
+  '/albums/$albumId': typeof LayoutAlbumsAlbumIdRoute
+  '/albums/': typeof LayoutAlbumsIndexRoute
 }
 export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
@@ -59,6 +73,8 @@ export interface FileRoutesByTo {
   '/avatar-generation': typeof LayoutAvatarGenerationRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
+  '/albums/$albumId': typeof LayoutAlbumsAlbumIdRoute
+  '/albums': typeof LayoutAlbumsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +84,28 @@ export interface FileRoutesById {
   '/_layout/avatar-generation': typeof LayoutAvatarGenerationRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/albums/$albumId': typeof LayoutAlbumsAlbumIdRoute
+  '/_layout/albums/': typeof LayoutAlbumsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sign-in' | '/sign-up' | '/avatar-generation' | '/settings'
+  fullPaths:
+    | '/'
+    | '/sign-in'
+    | '/sign-up'
+    | '/avatar-generation'
+    | '/settings'
+    | '/albums/$albumId'
+    | '/albums/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/sign-in' | '/sign-up' | '/avatar-generation' | '/settings' | '/'
+  to:
+    | '/sign-in'
+    | '/sign-up'
+    | '/avatar-generation'
+    | '/settings'
+    | '/'
+    | '/albums/$albumId'
+    | '/albums'
   id:
     | '__root__'
     | '/_layout'
@@ -82,6 +114,8 @@ export interface FileRouteTypes {
     | '/_layout/avatar-generation'
     | '/_layout/settings'
     | '/_layout/'
+    | '/_layout/albums/$albumId'
+    | '/_layout/albums/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -134,6 +168,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAvatarGenerationRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/albums/': {
+      id: '/_layout/albums/'
+      path: '/albums'
+      fullPath: '/albums/'
+      preLoaderRoute: typeof LayoutAlbumsIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/albums/$albumId': {
+      id: '/_layout/albums/$albumId'
+      path: '/albums/$albumId'
+      fullPath: '/albums/$albumId'
+      preLoaderRoute: typeof LayoutAlbumsAlbumIdRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
@@ -141,12 +189,16 @@ interface LayoutRouteChildren {
   LayoutAvatarGenerationRoute: typeof LayoutAvatarGenerationRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutAlbumsAlbumIdRoute: typeof LayoutAlbumsAlbumIdRoute
+  LayoutAlbumsIndexRoute: typeof LayoutAlbumsIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAvatarGenerationRoute: LayoutAvatarGenerationRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutAlbumsAlbumIdRoute: LayoutAlbumsAlbumIdRoute,
+  LayoutAlbumsIndexRoute: LayoutAlbumsIndexRoute,
 }
 
 const LayoutRouteWithChildren =

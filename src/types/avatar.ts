@@ -10,6 +10,7 @@ export type AvatarType = {
 };
 
 export type GeneratedAvatarType = {
+  id: string;
   url: string;
   name: string;
   prompt: string;

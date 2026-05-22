@@ -36,14 +36,12 @@ export default function HeaderBar() {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            color: '#7C4DFF',
             gap: '10px',
           }}
         >
           <AvatarCreation />
-          {isAuthenticated && <CardDisplay credits={profile?.credits ?? 0} />}
+
           <Button
-            variant="outlined"
             endIcon={<PhotoLibraryIcon />}
             onClick={() => {
               navigate({
@@ -56,6 +54,8 @@ export default function HeaderBar() {
           >
             Library
           </Button>
+          <Button onClick={() => navigate({ to: '/albums' })}>Albums</Button>
+          {isAuthenticated && <CardDisplay credits={profile?.credits ?? 0} />}
           <AccountPopover
             profile={profile}
             isAuthenticated={isAuthenticated}
