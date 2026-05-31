@@ -22,25 +22,26 @@ export default function AuthLayout({
       sx={{
         background:
           'linear-gradient(0deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.62) 100%), rgb(70,70,70)',
+        minHeight: '100vh',
+        overflowY: 'auto',
       }}
     >
       <Container
         disableGutters
         sx={{
-          height: '100vh',
-          minHeight: 'calc(100vh - 74px)',
+          minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
           px: { xs: 2, sm: 3 },
-          py: { xs: 2, sm: 4 },
+          py: { xs: 3, sm: 4 },
         }}
       >
         <Paper
           sx={{
-            minWidth: 480,
-            p: 4,
+            width: { xs: '100%', sm: 480 },
+            p: { xs: 3, sm: 4 },
             borderRadius: '24px',
             backgroundColor: 'rgba(255,255,255,0.05)',
             border: '1px solid rgba(255,255,255,0.1)',
@@ -48,7 +49,7 @@ export default function AuthLayout({
             boxShadow: '0px 8px 32px rgba(0,0,0,0.3)',
           }}
         >
-          <Stack spacing={4}>
+          <Stack spacing={{ xs: 3, sm: 4 }}>
             <Typography variant="h2" color="#fff" textAlign="center">
               {title}
             </Typography>

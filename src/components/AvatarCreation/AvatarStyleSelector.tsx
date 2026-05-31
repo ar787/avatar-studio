@@ -71,7 +71,8 @@ export function AvatarStyleSelector({
         exclusive
         sx={{
           display: 'flex',
-          gap: 2,
+          flexWrap: 'wrap',
+          gap: { xs: 1.5, sm: 2 },
           mb: 3,
         }}
       >
@@ -83,7 +84,8 @@ export function AvatarStyleSelector({
               value={style.value}
               sx={(theme) => ({
                 position: 'relative',
-                width: 160,
+                flex: { xs: '0 0 calc(50% - 6px)', sm: '0 0 auto' },
+                width: { xs: 'auto', sm: 140, md: 160 },
                 height: 'auto',
                 borderRadius: '12px !important',
                 border: '2px solid rgba(255, 255, 255, 0.12) !important',
