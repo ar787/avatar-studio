@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import { useNotification } from '@/hooks';
 import { generateAvatar } from '@/services/api/avatar.api';
-import { useAppSelector } from '@/store/hooks';
+import type { AvatarStyle } from '@/types/avatar';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setProfile } from '@/store/user/userSlice';
 import { selectIsAuthenticated } from '@/store/auth/authSelectors';
 
@@ -15,11 +16,12 @@ export function useAvatarGeneration() {
   const navigate = useNavigate();
   const router = useRouter();
 
+  const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const cleanupTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  async function onGenerate(value: string) {
+  async function onGenerate(value: string, style: AvatarStyle) {
     if (!isAuthenticated) {
       navigate({ to: '/sign-in', replace: true });
       return;
@@ -34,11 +36,11 @@ export function useAvatarGeneration() {
 
     try {
       notify.info('Generating avatar. This may take a moment...');
-      const { data } = await generateAvatar(value);
+      const { data } = await generateAvatar(value, style);
       router.invalidate();
       setProgress(100);
       setPreviews((prev) => [...prev, ...(data?.generatedAvatarUrls ?? [])]);
-      setProfile({ credits: data?.remainingCredits ?? 0 });
+      dispatch(setProfile({ credits: data?.remainingCredits ?? 0 }));
       notify.success('Avatar generated successfully!');
     } catch (error) {
       if (error instanceof Error) {

@@ -1,4 +1,8 @@
-import type { AvatarType, GeneratedAvatarType } from '@/types/avatar';
+import type {
+  AvatarStyle,
+  AvatarType,
+  GeneratedAvatarType,
+} from '@/types/avatar';
 import { tokenManager } from '@/utils/tokenManager';
 
 export const getAvatars = async () => {
@@ -28,7 +32,7 @@ export const getGeneratedAvatars = async () => {
   return result.data as GeneratedAvatarType[];
 };
 
-export const generateAvatar = async (prompt: string) => {
+export const generateAvatar = async (prompt: string, style: AvatarStyle) => {
   const token = await tokenManager.getToken();
   const response = await fetch('/api/avatars/generate', {
     method: 'POST',
@@ -36,7 +40,7 @@ export const generateAvatar = async (prompt: string) => {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ prompt }),
+    body: JSON.stringify({ prompt, style }),
   });
 
   if (!response.ok) {

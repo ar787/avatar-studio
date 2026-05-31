@@ -9,15 +9,18 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Slide from '@mui/material/Slide';
 import { type TransitionProps } from '@mui/material/transitions';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 import Dialog from '@ui/components/Dialog';
 import Button from '@ui/components/Button';
 import TextField from '@ui/components/TextField';
+import type { AvatarStyle } from '@/types/avatar';
+import { AvatarStyleSelector } from './AvatarStyleSelector';
 
 type AvatarCreationDialogProps = {
   open: boolean;
   onClose: () => void;
-  onGenerate: (value: string) => Promise<void>;
+  onGenerate: (value: string, style: AvatarStyle) => Promise<void>;
   loading: boolean;
   previews: string[];
   isAuthenticated: boolean;
@@ -43,6 +46,7 @@ export function AvatarCreationDialog({
   hasCredits,
 }: Readonly<AvatarCreationDialogProps>) {
   const [value, setValue] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState<AvatarStyle>('none');
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
@@ -74,6 +78,10 @@ export function AvatarCreationDialog({
     >
       <DialogTitle>Generate your avatar</DialogTitle>
       <DialogContent>
+        <AvatarStyleSelector
+          value={selectedStyle}
+          onChange={setSelectedStyle}
+        />
         <TextField
           value={value}
           onChange={handleChange}
@@ -126,7 +134,10 @@ export function AvatarCreationDialog({
         </Button>
         <Tooltip title={getTooltipTitle()}>
           <Button
-            onClick={() => onGenerate(value).finally(() => setValue(''))}
+            startIcon={<AutoFixHighIcon />}
+            onClick={() =>
+              onGenerate(value, selectedStyle).finally(() => setValue(''))
+            }
             disabled={disabled}
           >
             {loading ? 'Generating...' : 'Generate'}
