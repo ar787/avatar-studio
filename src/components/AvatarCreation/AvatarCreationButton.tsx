@@ -24,10 +24,7 @@ export const AvatarCreationButton = ({
       sx={{
         transition: 'all 300ms ease',
         '& .MuiButton-startIcon': {
-          marginRight: {
-            xs: 0,
-            md: 1,
-          },
+          marginRight: 1,
           marginLeft: {
             xs: 0,
             md: -0.5,
@@ -44,7 +41,7 @@ export const AvatarCreationButton = ({
     >
       <Box
         sx={{
-          display: { xs: 'none', md: 'flex' },
+          display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           overflow: 'hidden',
