@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 import Button, { type ButtonProps } from '@/ui/components/Button';
 
@@ -19,11 +19,10 @@ export const AvatarCreationButton = ({
 }: Readonly<AvatarCreationButtonProps>) => {
   return (
     <Button
-      startIcon={<AddBoxIcon />}
+      startIcon={<AutoFixHighIcon />}
       onClick={onClick}
       sx={{
         transition: 'all 300ms ease',
-
         '& .MuiButton-startIcon': {
           marginRight: {
             xs: 0,
@@ -50,7 +49,6 @@ export const AvatarCreationButton = ({
           alignItems: 'center',
           overflow: 'hidden',
           transition: 'all 300ms ease',
-
           gap: showProgress ? '8px' : 0,
         }}
       >
@@ -60,10 +58,8 @@ export const AvatarCreationButton = ({
           sx={{
             width: '100%',
             overflow: 'hidden',
-
             maxHeight: showProgress ? 20 : 0,
             opacity: showProgress ? 1 : 0,
-
             transition: 'all 300ms ease',
           }}
         >
