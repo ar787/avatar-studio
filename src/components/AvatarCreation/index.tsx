@@ -29,7 +29,7 @@ export default function AvatarCreation() {
       <AvatarCreationDialog
         open={open}
         onClose={handleClose}
-        onGenerate={(value) => onGenerate(value)}
+        onGenerate={(value, style) => onGenerate(value, style)}
         loading={loading}
         previews={previews}
         isAuthenticated={isAuthenticated}
