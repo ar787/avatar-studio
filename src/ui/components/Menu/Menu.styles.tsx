@@ -4,8 +4,8 @@ import MUIMenu, { menuClasses } from '@mui/material/Menu';
 export const StyledMenu = styled(MUIMenu)(({ theme }) => ({
   [`& .${menuClasses.paper}`]: {
     backgroundImage: 'none',
-    backgroundColor: theme.palette.modal.background,
-    borderColor: theme.palette.modal.border,
+    backgroundColor: theme.palette.surface.background,
+    borderColor: theme.palette.surface.border,
     borderWidth: 1,
     borderStyle: 'solid',
   },

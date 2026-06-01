@@ -21,7 +21,7 @@ export default function HeaderBar() {
     <AppBar
       position="fixed"
       sx={(theme) => ({
-        backgroundColor: theme.palette.modal.background,
+        backgroundColor: theme.palette.surface.background,
         backgroundImage: 'none',
       })}
     >

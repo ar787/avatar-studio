@@ -1,10 +1,12 @@
-import type { ButtonProps as MuiButtonProps } from '@mui/material/Button';
 import { forwardRef } from 'react';
-import { StyledButton } from './Button.styles';
+import MuiButton, {
+  type ButtonProps as MuiButtonProps,
+} from '@mui/material/Button';
 
 export type ButtonProps = MuiButtonProps;
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = 'contained', ...rest }, ref) => {
-    return <StyledButton ref={ref} variant={variant} {...rest} />;
+    return <MuiButton ref={ref} variant={variant} {...rest} />;
   },
 );

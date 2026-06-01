@@ -13,6 +13,7 @@ import {
 import { type Album } from '@/types/album';
 import Albums from '@/components/Album/Albums';
 import AlbumCreation from '@/components/Album/AlbumCreation';
+import { PageHeader } from '@/components/PageHeader';
 import { useNotification } from '@/hooks';
 
 function AlbumsPage() {
@@ -66,7 +67,7 @@ function AlbumsPage() {
   };
   return (
     <Box sx={{ paddingTop: 5 }}>
-      <h1>Albums</h1>
+      <PageHeader title="Albums" />
 
       {loading ? (
         <Box sx={{ p: 2 }}>Loading albums...</Box>

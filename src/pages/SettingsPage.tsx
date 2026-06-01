@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 
 import ProfileAvatar from '@/components/Settings/ProfileAvatar';
 import ProfileForm from '@/components/Settings/ProfileForm';
+import { PageHeader } from '@/components/PageHeader';
 import { useNotification, useUser } from '@/hooks';
 import Button from '@/ui/components/Button';
 import { updateProfile, updateProfilePicture } from '@/services/api/user.api';
@@ -35,9 +36,9 @@ export default function SettingsPage() {
 
   return (
     <Box sx={{ marginTop: 6 }}>
+      <PageHeader title="Profile Settings" />
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Stack spacing={2} sx={{ width: { xs: '100%', md: '50%' } }}>
-          <Typography variant="caption">Profile Settings</Typography>
           <ProfileAvatar
             src={profile?.picture ?? ''}
             onUpload={handleUpdateProfilePicture}
