@@ -56,7 +56,7 @@ export default function AlbumCard({
             width: 250,
             borderRadius: 3,
             overflow: 'hidden',
-            border: `1px solid ${theme.palette.modal.border}`,
+            border: `1px solid ${theme.palette.surface.border}`,
             backgroundColor: theme.palette.background.paper,
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             '&:hover': {

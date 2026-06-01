@@ -66,7 +66,7 @@ export function MobileNav({
         slotProps={{
           paper: {
             sx: (theme) => ({
-              backgroundColor: theme.palette.modal.background,
+              backgroundColor: theme.palette.surface.background,
               backgroundImage: 'none',
               width: 240,
             }),
