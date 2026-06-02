@@ -1,20 +1,19 @@
-import { use, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Box, Grid, Fade } from '@mui/material';
 import type { GridBaseProps } from '@mui/material/PigmentGrid';
 
-import { getAvatars } from '@/services/api/avatar.api';
 import AvatarCard from '@/components/AvatarCard';
 import AvatarView from '@/components/AvatarView';
 import type { AvatarType } from '@/types/avatar';
+import { useAvatars } from '@/hooks/queries/avatars';
 
-const avatarsPromise = getAvatars();
 const sizes: GridBaseProps['size'] = { xs: 4, md: 4, lg: 2 };
-const STAGGER = 80; // ms delay per item
+const STAGGER = 80;
 const ANIM_DURATION = 600;
 
 export default function HomePage() {
-  const avatars = use(avatarsPromise);
+  const { avatars } = useAvatars();
   const [show, setShow] = useState(false);
   const [avatar, setAvatar] = useState<AvatarType>();
 
