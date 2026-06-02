@@ -3,13 +3,14 @@ import Stack from '@mui/material/Stack';
 import TextField from '@ui/components/TextField';
 import Button from '@/ui/components/Button';
 import { useNotification } from '@/hooks';
+import type { UserProfile } from '@/types/userProfile';
 
 type ProfileForm = {
   values: {
     displayName: string;
     email: string;
   };
-  onSubmit: (data: { displayName: string }) => Promise<unknown>;
+  onSubmit: (data: Partial<UserProfile>) => Promise<unknown>;
 };
 
 export default function ProfileForm({

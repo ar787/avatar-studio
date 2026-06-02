@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
 import AlbumChooseDialog from './AlbumChooseDialog';
-import { getAlbums, addToAlbum, createAlbum } from '@/services/api/album.api';
-import type { Album } from '@/types/album';
+import {
+  useAddAvatarToAlbum,
+  useAlbums,
+  useCreateAlbum,
+} from '@/hooks/queries/albums';
 
 type AlbumChooseProps = {
   open: boolean;
@@ -14,29 +16,21 @@ export default function AlbumChoose({
   onClose,
   avatarId,
 }: Readonly<AlbumChooseProps>) {
-  const [albums, setAlbums] = useState<Album[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLoading(true);
-      getAlbums()
-        .then(setAlbums)
-        .finally(() => setLoading(false));
-    }
-  }, [open]);
+  const { albums, isLoading } = useAlbums();
+  const { addAvatarToAlbum } = useAddAvatarToAlbum();
+  const { create } = useCreateAlbum();
 
   return (
     <AlbumChooseDialog
       open={open}
       onClose={onClose}
       albums={albums}
-      albumsLoading={loading}
-      onConfirm={async (albumId) => await addToAlbum(albumId, avatarId)}
+      albumsLoading={isLoading}
+      onConfirm={async (albumId) =>
+        await addAvatarToAlbum({ id: albumId, avatarId })
+      }
       onCreateNewAlbum={async (name) => {
-        const newAlbum = await createAlbum(name);
-        setAlbums((prev) => [...prev, newAlbum]);
+        const newAlbum = await create(name);
         return newAlbum;
       }}
     />

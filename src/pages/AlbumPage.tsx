@@ -1,13 +1,7 @@
 import Box from '@mui/material/Box';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { useEffect, useState } from 'react';
-import {
-  getAlbum,
-  updateAlbum,
-  deleteAvatarFromAlbum,
-} from '@/services/api/album.api';
+import { useState } from 'react';
 import { useParams } from '@tanstack/react-router';
-import type { Album, GetAlbumApiReturn } from '@/types/album';
 import { downloadAvatarFromAlbum } from '@/services/api/download.api';
 
 import type { AvatarType } from '@/types/avatar';
@@ -16,26 +10,21 @@ import Button from '@/ui/components/Button';
 import AlbumRenameDialog from '@/components/Album/AlbumRenameDialog';
 import { useNotification } from '@/hooks';
 import AvatarActionCard from '@/components/AvatarActionCard';
+import {
+  useAlbum,
+  useRenameAlbum,
+  useDeleteAvatarFromAlbum,
+} from '@/hooks/queries/albums';
 
 const size: GridBaseProps['size'] = { xs: 4, md: 4, lg: 2 };
 
 export default function AlbumPage() {
   const { albumId } = useParams({ from: '/_layout/albums/$albumId' });
-  const [data, setData] = useState<GetAlbumApiReturn>({
-    albumMetadata: {} as Album,
-    avatars: [],
-  });
-
+  const { album } = useAlbum(albumId);
+  const { rename } = useRenameAlbum();
+  const { removeAvatar } = useDeleteAvatarFromAlbum(albumId);
   const [openRename, setOpenRename] = useState(false);
   const notify = useNotification();
-
-  useEffect(() => {
-    const fetchAlbum = async () => {
-      const result = await getAlbum(albumId);
-      setData(result);
-    };
-    fetchAlbum();
-  }, [albumId]);
 
   return (
     <Box sx={{ paddingTop: 5 }}>
@@ -51,10 +40,10 @@ export default function AlbumPage() {
         }}
         onClick={() => setOpenRename(true)}
       >
-        {data?.albumMetadata.name}
+        {album?.albumMetadata.name}
       </Button>
       <Grid container spacing={2} sx={{ mt: 4 }}>
-        {data?.avatars.map((avatar) => {
+        {album?.avatars.map((avatar) => {
           const newAvatar: AvatarType = {
             imageUrl: avatar.url as AvatarType['imageUrl'],
             name: 'avatar name',
@@ -65,18 +54,7 @@ export default function AlbumPage() {
               <AvatarActionCard
                 name={newAvatar.name}
                 src={newAvatar.imageUrl}
-                onDelete={async () => {
-                  await deleteAvatarFromAlbum(albumId, avatar.id);
-                  setData((prev) => {
-                    const newAvatars = data.avatars.filter(
-                      (el) => el.id !== avatar.id,
-                    );
-                    return {
-                      albumMetadata: { ...prev.albumMetadata },
-                      avatars: newAvatars,
-                    };
-                  });
-                }}
+                onDelete={() => removeAvatar(avatar.id)}
                 onDownload={() => downloadAvatarFromAlbum(albumId, avatar.id)}
               />
             </Grid>
@@ -87,13 +65,12 @@ export default function AlbumPage() {
         key={openRename ? 1 : 0}
         open={openRename}
         onClose={() => setOpenRename(false)}
-        initialName={data.albumMetadata.name ?? ''}
-        onConfirm={(name) =>
-          updateAlbum(data.albumMetadata.id, name).then((res) => {
-            setData((prev) => ({ ...prev, albumMetadata: res }));
-            notify.success('Album renamed successfully!');
-          })
-        }
+        initialName={album?.albumMetadata.name ?? ''}
+        onConfirm={async (name) => {
+          await rename({ id: albumId, name });
+          notify.success('Album renamed successfully!');
+          setOpenRename(false);
+        }}
       />
     </Box>
   );
