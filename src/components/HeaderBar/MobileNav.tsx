@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -15,7 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import CardDisplay from '@/components/CardDisplay';
 import AccountPopover from '@/components/AccountPopover';
-import AvatarCreation from '@/components/AvatarCreation';
+const AvatarCreation = lazy(() => import('@/components/AvatarCreation'));
 import type { UserProfile } from '@/types/userProfile';
 
 type MobileNavProps = {
@@ -76,7 +76,9 @@ export function MobileNav({
         <Box sx={{ pt: 2 }}>
           <List disablePadding>
             <ListItem sx={{ pb: 1.5 }}>
-              <AvatarCreation />
+              <Suspense fallback={null}>
+                <AvatarCreation />
+              </Suspense>
             </ListItem>
             <Divider />
             <ListItemButton
