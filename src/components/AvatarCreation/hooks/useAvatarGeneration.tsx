@@ -1,25 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useRouter } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { useNotification } from '@/hooks';
-import { generateAvatar } from '@/services/api/avatar.api';
 import type { AvatarStyle } from '@/types/avatar';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { setProfile } from '@/store/user/userSlice';
+import { useAppSelector } from '@/store/hooks';
 import { selectIsAuthenticated } from '@/store/auth/authSelectors';
+import { useGenerateAvatar } from '@/hooks/queries/avatars';
+import { useProgress } from './useProgress';
 
 export function useAvatarGeneration() {
-  const [loading, setLoading] = useState(false);
   const [previews, setPreviews] = useState<string[]>([]);
-  const [progress, setProgress] = useState(0);
-
-  const notify = useNotification();
   const navigate = useNavigate();
-  const router = useRouter();
-
-  const dispatch = useAppDispatch();
+  const { progress, start, complete, fail } = useProgress();
+  const notify = useNotification();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-
-  const cleanupTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { generate, isPending: loading } = useGenerateAvatar();
 
   async function onGenerate(value: string, style: AvatarStyle) {
     if (!isAuthenticated) {
@@ -27,55 +21,23 @@ export function useAvatarGeneration() {
       return;
     }
 
-    if (cleanupTimeoutRef.current) {
-      clearTimeout(cleanupTimeoutRef.current);
-    }
-
-    setProgress(3);
-    setLoading(true);
+    start();
+    notify.info('Generating avatar. This may take a moment...');
 
     try {
-      notify.info('Generating avatar. This may take a moment...');
-      const { data } = await generateAvatar(value, style);
-      router.invalidate();
-      setProgress(100);
+      const { data } = await generate({ prompt: value, style });
       setPreviews((prev) => [...prev, ...(data?.generatedAvatarUrls ?? [])]);
-      dispatch(setProfile({ credits: data?.remainingCredits ?? 0 }));
+      complete();
       notify.success('Avatar generated successfully!');
     } catch (error) {
-      if (error instanceof Error) {
-        let message = 'Something went wrong. Please try again later.';
-
-        if (error.message === 'Insufficient credits.') {
-          message = 'You have insufficient credits.';
-        }
-        notify.error(message);
+      let message = 'Something went wrong. Please try again later.';
+      if (error instanceof Error && error.message === 'Insufficient credits.') {
+        message = 'You have insufficient credits.';
       }
-    } finally {
-      cleanupTimeoutRef.current = setTimeout(() => {
-        setProgress(0);
-      }, 1000);
-      setLoading(false);
+      notify.error(message);
+      fail();
     }
   }
-
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    if (loading && progress < 90) {
-      interval = setInterval(() => {
-        setProgress((prev) => prev + (90 - prev) * 0.1); // Slows down as it nears 90
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [loading, progress]);
-
-  useEffect(() => {
-    return () => {
-      if (cleanupTimeoutRef.current) {
-        clearTimeout(cleanupTimeoutRef.current);
-      }
-    };
-  }, []);
 
   return { loading, previews, progress, onGenerate };
 }

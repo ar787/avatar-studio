@@ -1,11 +1,8 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import AvatarGenerationPage from '@/pages/AvatarGenerationPage';
-import { getGeneratedAvatars } from '@/services/api/avatar.api';
-import LoadingPage from '@/pages/LoadingPage';
 
 export const Route = createFileRoute('/_layout/avatar-generation')({
   component: AvatarGenerationPage,
-  pendingComponent: LoadingPage,
   beforeLoad: ({ context, location }) => {
     if (context.auth.isInitialLoading) {
       return;
@@ -24,16 +21,5 @@ export const Route = createFileRoute('/_layout/avatar-generation')({
     return {
       userId: typeof search.userId === 'string' ? search.userId : undefined,
     };
-  },
-  loaderDeps: ({ search }) => ({ userId: search.userId }),
-  loader: async ({ context }) => {
-    try {
-      return await getGeneratedAvatars();
-    } catch (error) {
-      if (error instanceof Error) {
-        context.notification.error(error.message);
-      }
-      return [];
-    }
   },
 });

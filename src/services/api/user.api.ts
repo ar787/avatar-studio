@@ -1,3 +1,4 @@
+import type { UserProfile } from '@/types/userProfile';
 import { tokenManager } from '@/utils/tokenManager';
 
 export const getUserProfile = async () => {
@@ -13,7 +14,7 @@ export const getUserProfile = async () => {
   return result.data;
 };
 
-export const updateProfile = async (displayName: string) => {
+export const updateProfile = async (data: Partial<UserProfile>) => {
   const token = await tokenManager.getToken();
   const response = await fetch('api/user/updateProfile', {
     method: 'PATCH',
@@ -22,7 +23,7 @@ export const updateProfile = async (displayName: string) => {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      displayName,
+      displayName: data.displayName,
     }),
   });
 

@@ -4,7 +4,7 @@ import { theme } from './index';
 
 declare module '@mui/material/styles' {
   interface Palette {
-    modal: {
+    surface: {
       background: string;
       border: string;
     };
@@ -13,7 +13,7 @@ declare module '@mui/material/styles' {
     };
   }
   interface PaletteOptions {
-    modal: {
+    surface: {
       background: string;
       border: string;
     };
