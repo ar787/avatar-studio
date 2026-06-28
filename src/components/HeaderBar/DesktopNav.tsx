@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import Box from '@mui/material/Box';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
@@ -6,7 +7,8 @@ import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import Button from '@ui/components/Button';
 import CardDisplay from '@/components/CardDisplay';
 import AccountPopover from '@/components/AccountPopover';
-import AvatarCreation from '@/components/AvatarCreation';
+
+const AvatarCreation = lazy(() => import('@/components/AvatarCreation'));
 import type { UserProfile } from '@/types/userProfile';
 
 type DesktopNavProps = {
@@ -32,7 +34,9 @@ export function DesktopNav({
         gap: '10px',
       }}
     >
-      <AvatarCreation />
+      <Suspense fallback={null}>
+        <AvatarCreation />
+      </Suspense>
       <Button
         startIcon={<PhotoLibraryIcon />}
         onClick={() =>
