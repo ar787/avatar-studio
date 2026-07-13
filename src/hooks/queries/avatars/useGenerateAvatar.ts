@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { generateAvatar } from '@/services/api/avatar.api';
 import { useAppDispatch } from '@/store/hooks';
 import { setProfile } from '@/store/user/userSlice';
@@ -7,14 +7,14 @@ import { queryKeys } from '../queryKeys';
 
 export function useGenerateAvatar() {
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
+
   const { mutateAsync: generate, isPending } = useMutation({
     mutationFn: ({ prompt, style }: { prompt: string; style: AvatarStyle }) =>
       generateAvatar(prompt, style),
-    onSuccess: ({ data }, _vars, _onMutateResult, context) => {
+    onSuccess: ({ data }) => {
       dispatch(setProfile({ credits: data?.remainingCredits ?? 0 }));
-      context.client.invalidateQueries({
-        queryKey: queryKeys.generatedAvatars(),
-      });
+      queryClient.invalidateQueries({ queryKey: queryKeys.generatedAvatars() });
     },
   });
   return { generate, isPending };

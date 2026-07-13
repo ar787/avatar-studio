@@ -19,6 +19,7 @@ type AvatarViewProps = {
   open: boolean;
   onClose: () => void;
   onDownload?: () => Promise<Blob>;
+  onEdit?: () => void;
 };
 
 const sx: SxProps = {
@@ -39,6 +40,7 @@ export default function AvatarView({
   imageUrl,
   name,
   onDownload,
+  onEdit,
 }: Readonly<AvatarViewProps>) {
   const notify = useNotification();
   const { handleDownload, loading } = useFileDownload({
@@ -89,6 +91,7 @@ export default function AvatarView({
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
+              gap: 1,
             }}
           >
             {loading && (
@@ -101,14 +104,27 @@ export default function AvatarView({
               />
             )}
             <Grow in={!loading} timeout={BUTTON_TRANSITION}>
-              <Button
-                onClick={handleDownload}
-                fullWidth
-                aria-label="Download avatar"
-                size="large"
-              >
-                Download
-              </Button>
+              <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
+                <Button
+                  onClick={handleDownload}
+                  fullWidth
+                  aria-label="Download avatar"
+                  size="large"
+                >
+                  Download
+                </Button>
+                {onEdit && (
+                  <Button
+                    onClick={onEdit}
+                    fullWidth
+                    aria-label="Edit avatar"
+                    size="large"
+                    variant="outlined"
+                  >
+                    Edit
+                  </Button>
+                )}
+              </Box>
             </Grow>
           </Box>
         </Box>

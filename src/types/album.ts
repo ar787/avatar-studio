@@ -1,3 +1,5 @@
+import type { AdjustState, PresetType } from './avatar';
+
 export type Album = {
   id: string;
   userId: string;
@@ -11,10 +13,13 @@ export type Album = {
 
 export type AlbumAvatar = {
   id: string;
+  avatarId: string;
   url: string;
   prompt: string;
   extension: string;
   createdAt: string;
+  adjustments?: AdjustState;
+  preset?: PresetType | null;
 };
 
 export type GetAlbumApiReturn = {
