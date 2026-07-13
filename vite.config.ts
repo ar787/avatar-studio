@@ -26,6 +26,20 @@ export default defineConfig(({ mode }) => {
       }),
       react(),
     ],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('firebase')) return 'firebase';
+            if (id.includes('@mui') || id.includes('@emotion')) return 'mui';
+            if (id.includes('@tanstack')) return 'tanstack';
+            if (id.includes('@reduxjs') || id.includes('react-redux'))
+              return 'redux';
+            if (id.includes('node_modules')) return 'vendor';
+          },
+        },
+      },
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
