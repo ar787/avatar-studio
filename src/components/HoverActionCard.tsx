@@ -1,16 +1,31 @@
 import { useState } from 'react';
-import { Card, CardMedia, Box, IconButton, styled } from '@mui/material';
+import {
+  Card,
+  CardMedia,
+  Box,
+  IconButton,
+  Portal,
+  styled,
+} from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import { useFileDownload } from '@hooks/useFileDownload';
 import { useNotification } from '@hooks/useNotification';
 import AlbumChoose from './Album/AlbumChoose';
+import {
+  AvatarEditorDialog,
+  AvatarEditorBadges,
+  type AdjustState,
+  type PresetType,
+} from '@/components/AvatarEditor';
 
 const StyledCard = styled(Card)(() => ({
   position: 'relative',
   borderRadius: 16,
   overflow: 'hidden',
   cursor: 'pointer',
+  height: 320,
 }));
 
 const Overlay = styled(Box)(() => ({
@@ -47,15 +62,22 @@ const FloatingButton = styled(IconButton)(() => ({
 type HoverActionCardProps = {
   id: string;
   src: string;
+  name: string;
   onDownload: () => Promise<Blob>;
+  initialAdjustments?: AdjustState;
+  initialPreset?: PresetType | null;
 };
 
 export default function HoverActionCard({
   id,
   src,
+  name,
   onDownload,
+  initialAdjustments,
+  initialPreset,
 }: Readonly<HoverActionCardProps>) {
   const [openChooseDialog, setOpenChooseDialog] = useState(false);
+  const [editorOpen, setEditorOpen] = useState(false);
 
   const notify = useNotification();
   const { handleDownload, loading } = useFileDownload({
@@ -69,7 +91,12 @@ export default function HoverActionCard({
   return (
     <>
       <StyledCard>
-        <CardMedia component="img" image={src} alt="avatar" />
+        <CardMedia
+          component="img"
+          image={src}
+          alt="avatar"
+          sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
 
         <Overlay>
           <ActionGroup>
@@ -79,6 +106,9 @@ export default function HoverActionCard({
                 onClick={() => setOpenChooseDialog(true)}
               >
                 <AddIcon />
+              </FloatingButton>
+              <FloatingButton size="small" onClick={() => setEditorOpen(true)}>
+                <EditIcon />
               </FloatingButton>
               <FloatingButton
                 size="small"
@@ -90,6 +120,11 @@ export default function HoverActionCard({
             </Box>
           </ActionGroup>
         </Overlay>
+
+        <AvatarEditorBadges
+          adjustments={initialAdjustments}
+          preset={initialPreset}
+        />
       </StyledCard>
 
       <AlbumChoose
@@ -97,6 +132,18 @@ export default function HoverActionCard({
         onClose={() => setOpenChooseDialog(false)}
         avatarId={id}
       />
+
+      <Portal>
+        <AvatarEditorDialog
+          open={editorOpen}
+          avatarId={id}
+          imageUrl={src}
+          name={name}
+          initialAdjustments={initialAdjustments}
+          initialPreset={initialPreset}
+          onClose={() => setEditorOpen(false)}
+        />
+      </Portal>
     </>
   );
 }

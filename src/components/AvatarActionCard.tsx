@@ -9,9 +9,16 @@ import {
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditIcon from '@mui/icons-material/Edit';
 import { useFileDownload } from '@hooks/useFileDownload';
 import { useNotification } from '@hooks/useNotification';
 import AvatarView from '@/components/AvatarView';
+import {
+  AvatarEditorDialog,
+  AvatarEditorBadges,
+  type AdjustState,
+  type PresetType,
+} from '@/components/AvatarEditor';
 
 const StyledCard = styled(Card)({
   position: 'relative',
@@ -49,6 +56,10 @@ const FloatingButton = styled(IconButton)({
 type AvatarActionCardProps = {
   src: string;
   name: string;
+  avatarId: string;
+  albumId: string;
+  adjustments?: AdjustState;
+  preset?: PresetType | null;
   onDownload: () => Promise<Blob>;
   onDelete: () => void;
 };
@@ -56,10 +67,15 @@ type AvatarActionCardProps = {
 export default function AvatarActionCard({
   src,
   name,
+  avatarId,
+  albumId,
+  adjustments,
+  preset,
   onDownload,
   onDelete,
 }: Readonly<AvatarActionCardProps>) {
   const [viewOpen, setViewOpen] = useState(false);
+  const [editorOpen, setEditorOpen] = useState(false);
   const notify = useNotification();
 
   const { handleDownload, loading } = useFileDownload({
@@ -86,6 +102,8 @@ export default function AvatarActionCard({
           onContextMenu={(e) => e.preventDefault()}
         />
 
+        <AvatarEditorBadges adjustments={adjustments} preset={preset} />
+
         <Overlay>
           <Box sx={{ display: 'flex', gap: 0.5 }}>
             <FloatingButton
@@ -98,6 +116,16 @@ export default function AvatarActionCard({
               loading={loading}
             >
               <DownloadIcon fontSize="small" />
+            </FloatingButton>
+            <FloatingButton
+              size="small"
+              aria-label="Edit avatar"
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditorOpen(true);
+              }}
+            >
+              <EditIcon fontSize="small" />
             </FloatingButton>
             <FloatingButton
               size="small"
@@ -120,6 +148,23 @@ export default function AvatarActionCard({
           name={name}
           onClose={() => setViewOpen(false)}
           onDownload={onDownload}
+          onEdit={() => {
+            setViewOpen(false);
+            setEditorOpen(true);
+          }}
+        />
+      </Portal>
+
+      <Portal>
+        <AvatarEditorDialog
+          open={editorOpen}
+          imageUrl={src}
+          name={name}
+          avatarId={avatarId}
+          albumId={albumId}
+          initialAdjustments={adjustments}
+          initialPreset={preset}
+          onClose={() => setEditorOpen(false)}
         />
       </Portal>
     </>

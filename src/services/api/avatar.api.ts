@@ -1,9 +1,55 @@
 import type {
+  AdjustState,
   AvatarStyle,
   AvatarType,
   GeneratedAvatarType,
+  PresetType,
 } from '@/types/avatar';
 import { tokenManager } from '@/utils/tokenManager';
+
+export const saveEditedAvatar = async ({
+  blob,
+  originalName,
+  albumId,
+  avatarId,
+  adjustments,
+  preset,
+}: {
+  blob: Blob;
+  originalName: string;
+  albumId: string;
+  avatarId: string;
+  adjustments: AdjustState;
+  preset: PresetType | null;
+}): Promise<{ avatar: GeneratedAvatarType; remainingCredits: number }> => {
+  const token = await tokenManager.getToken();
+  const formData = new FormData();
+  formData.append('file', blob, `${originalName}-edited.png`);
+  formData.append('originalName', originalName);
+  formData.append('albumId', albumId);
+  formData.append('avatarId', avatarId);
+  formData.append('adjustments', JSON.stringify(adjustments));
+  formData.append('preset', preset ?? '');
+  const response = await fetch('/api/avatars/save-edited', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    const error = text ? JSON.parse(text) : {};
+    throw new Error(error.message ?? 'Failed to save edited avatar.');
+  }
+
+  const result = await response.json();
+  return result.data as {
+    avatar: GeneratedAvatarType;
+    remainingCredits: number;
+  };
+};
 
 export const getAvatars = async () => {
   const response = await fetch('/api/avatars');

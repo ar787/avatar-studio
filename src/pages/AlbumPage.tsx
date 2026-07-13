@@ -54,6 +54,10 @@ export default function AlbumPage() {
               <AvatarActionCard
                 name={newAvatar.name}
                 src={newAvatar.imageUrl}
+                avatarId={avatar.avatarId}
+                adjustments={avatar.adjustments}
+                preset={avatar.preset}
+                albumId={albumId}
                 onDelete={() => removeAvatar(avatar.id)}
                 onDownload={() => downloadAvatarFromAlbum(albumId, avatar.id)}
               />

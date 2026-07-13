@@ -29,11 +29,14 @@ function AvatarCardList({ list }: Readonly<AvatarCardListProps>) {
   return (
     <Grid container spacing={2} sx={{ mt: 4, width: '100%' }}>
       {list.map((avatar) => (
-        <Grid size={sizes} key={avatar.name}>
+        <Grid size={sizes} key={avatar.id}>
           <HoverActionCard
             id={avatar.id}
             src={avatar.url}
+            name={avatar.name}
             onDownload={() => downloadAvatarFromLibrary(avatar.name)}
+            initialAdjustments={avatar.adjustments}
+            initialPreset={avatar.preset}
           />
         </Grid>
       ))}
