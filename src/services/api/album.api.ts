@@ -3,7 +3,7 @@ import { tokenManager } from '@/utils/tokenManager';
 
 export const getAlbums = async () => {
   const token = await tokenManager.getToken();
-  const response = await fetch('/api/albums', {
+  const response = await fetch('/api/v1/albums', {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -20,7 +20,7 @@ export const getAlbums = async () => {
 
 export const createAlbum = async (name: string) => {
   const token = await tokenManager.getToken();
-  const response = await fetch('/api/albums', {
+  const response = await fetch('/api/v1/albums', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -39,7 +39,7 @@ export const createAlbum = async (name: string) => {
 
 export const getAlbum = async (id: string) => {
   const token = await tokenManager.getToken();
-  const response = await fetch(`/api/albums/${id}`, {
+  const response = await fetch(`/api/v1/albums/${id}`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ export const getAlbum = async (id: string) => {
 
 export const updateAlbum = async (id: string, name: string): Promise<Album> => {
   const token = await tokenManager.getToken();
-  const response = await fetch(`/api/albums/${id}`, {
+  const response = await fetch(`/api/v1/albums/${id}`, {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ export const updateAlbum = async (id: string, name: string): Promise<Album> => {
 
 export const deleteAlbum = async (id: string): Promise<void> => {
   const token = await tokenManager.getToken();
-  const response = await fetch(`/api/albums/${id}`, {
+  const response = await fetch(`/api/v1/albums/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -94,7 +94,7 @@ export const deleteAvatarFromAlbum = async (
   avatarId: string,
 ): Promise<{ success: boolean; message: string }> => {
   const token = await tokenManager.getToken();
-  const response = await fetch(`/api/albums/${id}/avatars/${avatarId}`, {
+  const response = await fetch(`/api/v1/albums/${id}/avatars/${avatarId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -111,7 +111,7 @@ export const deleteAvatarFromAlbum = async (
 
 export const addToAlbum = async (id: string, avatarId: string) => {
   const token = await tokenManager.getToken();
-  const response = await fetch(`/api/albums/${id}/avatars`, {
+  const response = await fetch(`/api/v1/albums/${id}/avatars`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,

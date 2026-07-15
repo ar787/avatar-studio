@@ -1,7 +1,13 @@
 import { tokenManager } from '@/utils/tokenManager';
 
 export const getAvatarDownloadBlob = async (path: string) => {
-  const response = await fetch(`/api/avatars/download/${path}.jpeg`);
+  const token = await tokenManager.getToken();
+  const response = await fetch(`/api/v1/avatars/${path}.jpeg/download`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!response.ok) {
     const errorData = await response.json();
@@ -18,7 +24,7 @@ export const downloadAvatarFromAlbum = async (
 ): Promise<Blob> => {
   const token = await tokenManager.getToken();
   const response = await fetch(
-    `/api/albums/${albumId}/avatars/${avatarDocId}/download`,
+    `/api/v1/albums/${albumId}/avatars/${avatarDocId}/download`,
     {
       method: 'GET',
       headers: {
