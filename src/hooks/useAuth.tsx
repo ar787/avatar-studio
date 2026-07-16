@@ -1,3 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query';
+
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   signIn as signInThunk,
@@ -12,6 +14,7 @@ import {
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
   const isInitialLoading = useAppSelector(selectIsInitialLoading);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
@@ -28,7 +31,8 @@ export const useAuth = () => {
   };
 
   const logOut = async () => {
-    return await dispatch(logoutThunk()).unwrap();
+    await dispatch(logoutThunk()).unwrap();
+    queryClient.clear();
   };
   return {
     isAuthenticated,

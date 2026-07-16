@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import CardDisplay from '@/components/CardDisplay';
@@ -121,6 +122,25 @@ export function MobileNav({
                 <PhotoAlbumIcon />
               </ListItemIcon>
               <ListItemText primary="Albums" />
+            </ListItemButton>
+            <ListItemButton
+              onClick={() => {
+                navigate({ to: '/about' });
+                setDrawerOpen(false);
+              }}
+              sx={(theme) => ({
+                '&:hover': {
+                  backgroundColor: theme.palette.customAction.menuHover,
+                },
+                '& .MuiListItemIcon-root': {
+                  color: theme.palette.primary.main,
+                },
+              })}
+            >
+              <ListItemIcon>
+                <InfoOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="About" />
             </ListItemButton>
           </List>
         </Box>
