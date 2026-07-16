@@ -15,6 +15,7 @@ import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutAvatarGenerationRouteImport } from './routes/_layout/avatar-generation'
+import { Route as LayoutAboutRouteImport } from './routes/_layout/about'
 import { Route as LayoutAlbumsIndexRouteImport } from './routes/_layout/albums/index'
 import { Route as LayoutAlbumsAlbumIdRouteImport } from './routes/_layout/albums/$albumId'
 
@@ -47,6 +48,11 @@ const LayoutAvatarGenerationRoute = LayoutAvatarGenerationRouteImport.update({
   path: '/avatar-generation',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutAboutRoute = LayoutAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutAlbumsIndexRoute = LayoutAlbumsIndexRouteImport.update({
   id: '/albums/',
   path: '/albums/',
@@ -62,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/about': typeof LayoutAboutRoute
   '/avatar-generation': typeof LayoutAvatarGenerationRoute
   '/settings': typeof LayoutSettingsRoute
   '/albums/$albumId': typeof LayoutAlbumsAlbumIdRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/about': typeof LayoutAboutRoute
   '/avatar-generation': typeof LayoutAvatarGenerationRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
@@ -81,6 +89,7 @@ export interface FileRoutesById {
   '/_layout': typeof LayoutRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/_layout/about': typeof LayoutAboutRoute
   '/_layout/avatar-generation': typeof LayoutAvatarGenerationRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
@@ -93,6 +102,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sign-in'
     | '/sign-up'
+    | '/about'
     | '/avatar-generation'
     | '/settings'
     | '/albums/$albumId'
@@ -101,6 +111,7 @@ export interface FileRouteTypes {
   to:
     | '/sign-in'
     | '/sign-up'
+    | '/about'
     | '/avatar-generation'
     | '/settings'
     | '/'
@@ -111,6 +122,7 @@ export interface FileRouteTypes {
     | '/_layout'
     | '/sign-in'
     | '/sign-up'
+    | '/_layout/about'
     | '/_layout/avatar-generation'
     | '/_layout/settings'
     | '/_layout/'
@@ -168,6 +180,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAvatarGenerationRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/about': {
+      id: '/_layout/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof LayoutAboutRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/albums/': {
       id: '/_layout/albums/'
       path: '/albums'
@@ -186,6 +205,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface LayoutRouteChildren {
+  LayoutAboutRoute: typeof LayoutAboutRoute
   LayoutAvatarGenerationRoute: typeof LayoutAvatarGenerationRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
@@ -194,6 +214,7 @@ interface LayoutRouteChildren {
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutAboutRoute: LayoutAboutRoute,
   LayoutAvatarGenerationRoute: LayoutAvatarGenerationRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
