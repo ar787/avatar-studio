@@ -30,7 +30,7 @@ export const saveEditedAvatar = async ({
   formData.append('avatarId', avatarId);
   formData.append('adjustments', JSON.stringify(adjustments));
   formData.append('preset', preset ?? '');
-  const response = await fetch('/api/avatars/save-edited', {
+  const response = await fetch('/api/v1/avatars/save-edited', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -52,7 +52,7 @@ export const saveEditedAvatar = async ({
 };
 
 export const getAvatars = async () => {
-  const response = await fetch('/api/avatars');
+  const response = await fetch('/api/v1/avatars');
   const result = await response.json();
 
   return result.data as AvatarType[];
@@ -61,7 +61,7 @@ export const getAvatars = async () => {
 export const getGeneratedAvatars = async () => {
   const token = await tokenManager.getToken();
 
-  const response = await fetch('/api/avatars/generated-avatars', {
+  const response = await fetch('/api/v1/avatars/library', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -80,7 +80,7 @@ export const getGeneratedAvatars = async () => {
 
 export const generateAvatar = async (prompt: string, style: AvatarStyle) => {
   const token = await tokenManager.getToken();
-  const response = await fetch('/api/avatars/generate', {
+  const response = await fetch('/api/v1/avatars', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,

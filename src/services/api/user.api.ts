@@ -3,7 +3,7 @@ import { tokenManager } from '@/utils/tokenManager';
 
 export const getUserProfile = async () => {
   const token = await tokenManager.getToken();
-  const response = await fetch('/api/user/getUserProfile', {
+  const response = await fetch('/api/v1/users/profile', {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -16,7 +16,7 @@ export const getUserProfile = async () => {
 
 export const updateProfile = async (data: Partial<UserProfile>) => {
   const token = await tokenManager.getToken();
-  const response = await fetch('api/user/updateProfile', {
+  const response = await fetch('api/v1/users/profile', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export const updateProfilePicture = async (
   const token = await tokenManager.getToken();
   const formData = new FormData();
   formData.append('picture', file);
-  const response = await fetch('api/user/profile/image', {
+  const response = await fetch('api/v1/users/profile/image', {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${token}`,
