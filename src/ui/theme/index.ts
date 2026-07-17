@@ -17,6 +17,15 @@ export const theme = createTheme({
     },
   },
   components: {
+    MuiDrawer: {
+      styleOverrides: {
+        paper: ({ theme }) => ({
+          backgroundColor: theme.palette.surface.background,
+          backgroundImage: 'none',
+          borderColor: theme.palette.surface.border,
+        }),
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
