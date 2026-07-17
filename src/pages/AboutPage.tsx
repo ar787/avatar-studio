@@ -35,7 +35,7 @@ const features = [
 
 export default function AboutPage() {
   return (
-    <Box sx={{ mt: 6, pb: 8 }}>
+    <Box sx={{ paddingTop: 5 }}>
       <PageHeader title="About" />
 
       <Stack spacing={6} sx={{ maxWidth: 720, mx: 'auto' }}>
