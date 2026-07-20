@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import Box from '@mui/material/Box';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import Button from '@ui/components/Button';
 import CardDisplay from '@/components/CardDisplay';
@@ -53,6 +54,12 @@ export function DesktopNav({
         onClick={() => navigate({ to: '/albums' })}
       >
         Albums
+      </Button>
+      <Button
+        startIcon={<InfoOutlinedIcon />}
+        onClick={() => navigate({ to: '/about' })}
+      >
+        About
       </Button>
       {isAuthenticated && <CardDisplay credits={profile?.credits ?? 0} />}
       <AccountPopover

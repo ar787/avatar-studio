@@ -8,7 +8,12 @@ import { AvatarCreationDialog } from './AvatarCreationDialog';
 import { useAvatarGeneration } from './hooks/useAvatarGeneration';
 import { AvatarCreationButton } from './AvatarCreationButton';
 
-export default function AvatarCreation() {
+type AvatarCreationProps = Readonly<{ compact?: boolean; active?: boolean }>;
+
+export default function AvatarCreation({
+  compact = false,
+  active = false,
+}: AvatarCreationProps) {
   const [open, setOpen] = useState(false);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const profile = useAppSelector(selectUserProfile);
@@ -20,10 +25,12 @@ export default function AvatarCreation() {
   return (
     <>
       <AvatarCreationButton
-        text="Generate Avatar"
+        text={compact ? 'Generate' : 'Generate Avatar'}
         progress={progress}
         showProgress={progress > 0 && hasCredits}
         onClick={handleOpen}
+        compact={compact}
+        active={active}
       />
 
       <AvatarCreationDialog

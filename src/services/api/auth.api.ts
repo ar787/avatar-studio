@@ -31,7 +31,7 @@ export const signInByGoogleAccount = () => {
 
 export const createUserDocument = async () => {
   const token = await tokenManager.getToken();
-  const response = await fetch('/api/auth/createUserDocument', {
+  const response = await fetch('/api/v1/auth', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
