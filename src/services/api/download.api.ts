@@ -43,15 +43,12 @@ export const downloadAvatarFromAlbum = async (
 
 export const downloadAvatarFromLibrary = async (fileName: string) => {
   const token = await tokenManager.getToken();
-  const response = await fetch(
-    `/api/avatars/download-from-library/${fileName}`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  const response = await fetch(`/api/v1/avatars/library/${fileName}/download`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+  });
 
   if (!response.ok) {
     const errorData = await response.json();
