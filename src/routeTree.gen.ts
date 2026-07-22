@@ -14,6 +14,7 @@ import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
+import { Route as LayoutGenerateRouteImport } from './routes/_layout/generate'
 import { Route as LayoutAvatarGenerationRouteImport } from './routes/_layout/avatar-generation'
 import { Route as LayoutAboutRouteImport } from './routes/_layout/about'
 import { Route as LayoutAlbumsIndexRouteImport } from './routes/_layout/albums/index'
@@ -43,6 +44,11 @@ const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutGenerateRoute = LayoutGenerateRouteImport.update({
+  id: '/generate',
+  path: '/generate',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutAvatarGenerationRoute = LayoutAvatarGenerationRouteImport.update({
   id: '/avatar-generation',
   path: '/avatar-generation',
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof SignUpRoute
   '/about': typeof LayoutAboutRoute
   '/avatar-generation': typeof LayoutAvatarGenerationRoute
+  '/generate': typeof LayoutGenerateRoute
   '/settings': typeof LayoutSettingsRoute
   '/albums/$albumId': typeof LayoutAlbumsAlbumIdRoute
   '/albums/': typeof LayoutAlbumsIndexRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByTo {
   '/sign-up': typeof SignUpRoute
   '/about': typeof LayoutAboutRoute
   '/avatar-generation': typeof LayoutAvatarGenerationRoute
+  '/generate': typeof LayoutGenerateRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
   '/albums/$albumId': typeof LayoutAlbumsAlbumIdRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   '/sign-up': typeof SignUpRoute
   '/_layout/about': typeof LayoutAboutRoute
   '/_layout/avatar-generation': typeof LayoutAvatarGenerationRoute
+  '/_layout/generate': typeof LayoutGenerateRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/albums/$albumId': typeof LayoutAlbumsAlbumIdRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/about'
     | '/avatar-generation'
+    | '/generate'
     | '/settings'
     | '/albums/$albumId'
     | '/albums/'
@@ -113,6 +123,7 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/about'
     | '/avatar-generation'
+    | '/generate'
     | '/settings'
     | '/'
     | '/albums/$albumId'
@@ -124,6 +135,7 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/_layout/about'
     | '/_layout/avatar-generation'
+    | '/_layout/generate'
     | '/_layout/settings'
     | '/_layout/'
     | '/_layout/albums/$albumId'
@@ -173,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutSettingsRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/generate': {
+      id: '/_layout/generate'
+      path: '/generate'
+      fullPath: '/generate'
+      preLoaderRoute: typeof LayoutGenerateRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/avatar-generation': {
       id: '/_layout/avatar-generation'
       path: '/avatar-generation'
@@ -207,6 +226,7 @@ declare module '@tanstack/react-router' {
 interface LayoutRouteChildren {
   LayoutAboutRoute: typeof LayoutAboutRoute
   LayoutAvatarGenerationRoute: typeof LayoutAvatarGenerationRoute
+  LayoutGenerateRoute: typeof LayoutGenerateRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutAlbumsAlbumIdRoute: typeof LayoutAlbumsAlbumIdRoute
@@ -216,6 +236,7 @@ interface LayoutRouteChildren {
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAboutRoute: LayoutAboutRoute,
   LayoutAvatarGenerationRoute: LayoutAvatarGenerationRoute,
+  LayoutGenerateRoute: LayoutGenerateRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutAlbumsAlbumIdRoute: LayoutAlbumsAlbumIdRoute,

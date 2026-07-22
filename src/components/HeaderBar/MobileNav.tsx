@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -13,10 +13,11 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
+import Button from '@ui/components/Button';
 import CardDisplay from '@/components/CardDisplay';
 import AccountPopover from '@/components/AccountPopover';
-const AvatarCreation = lazy(() => import('@/components/AvatarCreation'));
 import type { UserProfile } from '@/types/userProfile';
 
 type MobileNavProps = {
@@ -77,9 +78,16 @@ export function MobileNav({
         <Box sx={{ pt: 2 }}>
           <List disablePadding>
             <ListItem sx={{ pb: 1.5 }}>
-              <Suspense fallback={null}>
-                <AvatarCreation />
-              </Suspense>
+              <Button
+                fullWidth
+                startIcon={<AutoFixHighIcon />}
+                onClick={() => {
+                  navigate({ to: '/generate' });
+                  setDrawerOpen(false);
+                }}
+              >
+                Generate
+              </Button>
             </ListItem>
             <Divider />
             <ListItemButton

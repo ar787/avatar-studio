@@ -1,4 +1,3 @@
-import { lazy, Suspense } from 'react';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { Divider, useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -10,17 +9,17 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CloseIcon from '@mui/icons-material/Close';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import type { SvgIconComponent } from '@mui/icons-material';
 
 import { useAppSelector } from '@/store/hooks';
 import { selectAuthUser } from '@/store/auth/authSelectors';
 import { selectUserProfile } from '@/store/user/userSelectors';
 
-const AvatarCreation = lazy(() => import('@/components/AvatarCreation'));
-
 const DRAWER_WIDTH = 84;
 
 const NAV_ITEMS: { key: string; label: string; icon: SvgIconComponent }[] = [
+  { key: '/generate', label: 'Generate', icon: AutoFixHighIcon },
   { key: '/avatar-generation', label: 'Library', icon: PhotoLibraryIcon },
   { key: '/albums', label: 'Albums', icon: PhotoAlbumIcon },
   { key: '/about', label: 'About', icon: InfoOutlinedIcon },
@@ -52,7 +51,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
     if (key === '/avatar-generation') {
       navigate({ to: '/avatar-generation', search: { userId: user?.uid } });
     } else {
-      navigate({ to: key as '/' | '/albums' | '/about' | '/settings' });
+      navigate({
+        to: key as '/' | '/albums' | '/about' | '/settings' | '/generate',
+      });
     }
     if (isMobile) onClose();
   };
@@ -114,10 +115,6 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       </Box>
 
       <Divider sx={{ mb: 1, width: 44, bgcolor: '#d6e1ff1f' }} />
-
-      <Suspense fallback={null}>
-        <AvatarCreation compact />
-      </Suspense>
 
       {NAV_ITEMS.map(({ key, label, icon: Icon }) => {
         const active = isActive(key);

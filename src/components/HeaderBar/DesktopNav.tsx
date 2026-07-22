@@ -1,15 +1,13 @@
-import { lazy, Suspense } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import Box from '@mui/material/Box';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import PhotoAlbumIcon from '@mui/icons-material/PhotoAlbum';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 import Button from '@ui/components/Button';
 import CardDisplay from '@/components/CardDisplay';
 import AccountPopover from '@/components/AccountPopover';
-
-const AvatarCreation = lazy(() => import('@/components/AvatarCreation'));
 import type { UserProfile } from '@/types/userProfile';
 
 type DesktopNavProps = {
@@ -35,9 +33,12 @@ export function DesktopNav({
         gap: '10px',
       }}
     >
-      <Suspense fallback={null}>
-        <AvatarCreation />
-      </Suspense>
+      <Button
+        startIcon={<AutoFixHighIcon />}
+        onClick={() => navigate({ to: '/generate' })}
+      >
+        Generate
+      </Button>
       <Button
         startIcon={<PhotoLibraryIcon />}
         onClick={() =>
