@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import LinearProgress from '@mui/material/LinearProgress';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import Button from '@ui/components/Button';
 
@@ -21,6 +22,8 @@ export function GenerateButton({
   tooltipTitle,
   onClick,
 }: GenerateButtonProps) {
+  const showIndicator = loading || progress > 0;
+
   const loadingIndicator = (
     <Box
       sx={{
@@ -31,11 +34,19 @@ export function GenerateButton({
         gap: 1,
       }}
     >
-      <Typography variant="body2">Generating...</Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        {!loading && <CheckCircleIcon color="success" fontSize="small" />}
+        <Typography
+          variant="body2"
+          color={loading ? 'inherit' : 'success.main'}
+        >
+          {loading ? 'Generating...' : 'Generated!'}
+        </Typography>
+      </Box>
       <LinearProgress
         value={progress}
         variant="determinate"
-        color="info"
+        color={loading ? 'info' : 'success'}
         sx={{ width: '100%' }}
       />
     </Box>
@@ -47,7 +58,7 @@ export function GenerateButton({
         startIcon={<AutoFixHighIcon />}
         onClick={onClick}
         disabled={disabled}
-        loading={loading}
+        loading={showIndicator}
         loadingIndicator={loadingIndicator}
       >
         Generate
